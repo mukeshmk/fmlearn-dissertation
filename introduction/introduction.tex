@@ -19,7 +19,7 @@ The time, electricity, computational power and money spent for the task of algor
 The problem here is the workflow of machine learning and data science libraries, these libraries usually work in isolation and the information regarding how an algorithm performs on a particular dataset is neither publisher nor shared. Which leads to computationally expensive and time consuming task like algorithm selection and hyper-parameter optimisation being performed over and over again for the same dataset.
 
 \section{Research Goal}
-Our goal is to facilitate the algorithm selection and configuration process by making it faster with the use of historic performance data, produced on various devices and by various machine learning algorithms and libraries to improve the performance of algorithm selection thus saving time, electricity, computational power and money which is required in finding the best algorithm and it's optimal hyper-parameters for the task.
+Our goal is to facilitate the algorithm selection and configuration process by making it faster with the use of historic performance data, produced on various devices and by various machine learning algorithms and libraries to improve the performance of algorithm selection.Thus saving time, electricity, computational power and money which is required in finding the best algorithm and its optimal hyper-parameters for the task.
 
 To improve the algorithm selection and configuration process I propose what I call “Federated Meta-Learning”. In addition, I present a prototype of Federated Meta Learning named “FMLearn”.
 
@@ -36,9 +36,9 @@ The specific objectives of the research are:
 \end{itemize}
 
 \subsection{Federated Meta Learning}
-I propose “Federated Meta-Learning” (FML), a concept that allows everyone to benefit from the data that is generated through software libraries including standard machine learning and data science libraries as well as the auto* tools. 
+Dr. Joeran Beel proposed “Federated Meta-Learning” (FML), a concept that allows everyone to benefit from the data that is generated through software libraries including standard machine learning and data science libraries as well as the auto* tools. 
 
-Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks across devices. I envision federated meta learning as an ecosystem where the raw data is kept on the original  devices and the meta data, algorithm names, and performance metrics of the algorithm on the tasks would be stored on a central FML server (though a peer-to-peer architecture might also be possible). And using this historic performance data, predict the best performing algorithm along with it's hyper-parameters for a previously seen or unseen task.
+Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks across devices. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original  devices and the meta data, algorithm names, and performance metrics of the algorithm on the tasks would be stored on a central FML server (though a peer-to-peer architecture might also be possible). Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
 
 \subsection{FMLearn}
 I introduce “FMLearn" as a simple proof of concept of Federated Meta-Learning and it allows everyone to benefit from the data that is generated through machine learning and data science libraries. FMLearn consists of a server\footnote{\url{https://github.com/mukeshmk/fm-learn}} and a client, in our case a modified scikit-learn\footnote{\url{https://github.com/mukeshmk/scikit-learn}}, but it could be any machine learning library.
