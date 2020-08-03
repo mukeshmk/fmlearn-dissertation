@@ -1,6 +1,8 @@
 \chapter{Background Details}
 
-\section{Sate of the Art - AutoML}
+\section{Automated Machine Learning}
+\section{Algorithm Selection}
+\section{Algorithm Configuration}
 Automated Machine Learning or AutoML, is the process of automating the time consuming task of Algorithm Selection and Optimizing the Hyper-Parameters. There are many tools that offer to this complicated and time consuming task like Auto-Sklearn, Auto-Weka, Auto-Keras, etc. Apart from these tasks AutoML tools also perform feature selection, featuring engineering, data pre-processing and also analyse and tune the results. Among the various tasks performed by the AutoML Tools, the tasks that consume the most of the time are Algorithm Selection and Hpyer-Parameter Optimisation. 
 
 Algorithm Selection is usually done on an instance by instance basis, meaning different algorithm have to be chosen for different datasets. An algorithm which performs exceptionally well for one dataset may perform poorly for another. The task of choosing an algorithm is dependent on what data we have and how we choose to use it, meaning how the data is cleaned, encoded, imputed, distributed and also how they co-relate with other features or variables within the dataset. The manual task of algorithm selection involves studying and understanding the relationship between different features of the dataset, trying various types of pre-processing steps to bring out the inter-feature relationship which best explains the data. 
@@ -12,7 +14,7 @@ Hyper-Parameter Optimisation / Tuning is a process of selecting a set of optimal
 There are various optimisation strategies, among them the commonly used strategies are: Grid search, Random search, Hill Climbing and Bayesian optimization. The working of these strategies are out of scope of this paper, but the important thing to note is that these strategies takes up a great deal of time, electricity and computational power, before a optimal set of hyper-parameter can be chosen for an algorithm-dataset pair.
 
 \section{Project Overview}
-To tackle this repetitive and time consuming nature of these task, I propose, what I call Federated Meta-Learning and have build an application called FMLearn to implement the same. Before I explain what the application is and what is does, some important information of this application are as follows. FMLearn is an application developed using the client-server model, which allows the exchange of meta-data about machine learning models and data for the purpose of meta-learned algorithm selection and configuration. In this Client-Server architecture the Client here is a popular Machine Learning package called Scikit-Learn which has been modified to the needs of the project. The client also enlists the help of another popular AutoML package for meta-data collection called Auto-Sklearn. The server is a Python-Flask Application with a PostgreSQL Database developed from scratch and deployed on a Online hosting platform called Heroku.
+To tackle this repetitive and time consuming nature of these task, Dr. Joeran Beel proposed, what he called Federated Meta-Learning. Applying the concept of Federated Meta Learning, I have build an application called FMLearn to implement the same. Before explaining what the application is and what is does, some important information of this application are as follows. FMLearn is an application developed using the client-server model, which allows the exchange of meta-data about machine learning models and data for the purpose of meta-learned algorithm selection and configuration. In this Client-Server architecture the Client here is a popular Machine Learning package called Scikit-Learn which has been modified to the needs of the project. The client also enlists the help of another popular AutoML package for meta-data collection called Auto-Sklearn. 
 
 \subsection{The Client: Scikit-Learn}
 The client performs 2 crucial roles, one is to publish / send data to the server, which is then used by FMLearn to learn from and use this knowledge to make future predictions for tasks. The other task is to retrieve data from FMLearn, the data consists of Algorithm Predictions for previously seen or unseen datasets. The ideal choice for a client in such a role would be any popular and easy to use Machine Learning Library, and my choice was to use Scikit-Learn.
@@ -20,12 +22,10 @@ The client performs 2 crucial roles, one is to publish / send data to the server
 Scikit-learn \citep{scikit-learn} is a widely used, free and open source machine learning library\footnote{https://pypi.org/project/scikit-learn/}. I have used this as the client in the client-server model of my project to collect the information regarding how different classification, regression and clustering algorithms perform on various datasets and then publish / send this information about the model and other meta-data collected to the server - FMLearn - via the API endpoints which are made publicly available. It  also performs the role of retrieving the predicted algorithm for a previously seen or unseen task from the server via other exposed API's.
 
 \subsection{The Server: FMLearn}
-The server is a Python Flask Application, which serves API's requests providing the caller with the requested details. It also acts as a knowledge base for all the data that is collected using the client, and learns from this knowledge base and suggests algorithms for a given task. It also has a very minimal user interface which explains the applications and provides links to various other useful information which might be required for the user.
+The server is a Python Application, which serves API's requests providing the caller with the requested details. It also acts as a knowledge base for all the data that is collected using the client, and learns from this knowledge base and suggests algorithms for a given task. It also has a very minimal user interface which explains the applications and provides links to various other useful information which might be required for the user.
 
 \subsection{Meta-Features from Auto-Sklearn}
 The tasks or datasets on which these algorithms run on are described by their meta-features which are obtained using the Auto-sklearn \citep{feurer:m} library via the client and this information about the meta-data about the data along with performance details of the algorithm on a particular task is sent / published to the server via an API call.
-
-
 
 %% a multi-line comment as an if statement
 \if false
@@ -44,3 +44,5 @@ The tasks or datasets on which these algorithms run on are described by their me
 \subsection{why scikit learn}
 
 \fi
+
+
