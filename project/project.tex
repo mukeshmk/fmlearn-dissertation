@@ -1,10 +1,64 @@
 \chapter{Design and Implementation}
 
-This chapter provides details regarding the FMLearn application, implementation of the proposed concept, that is, Federated meta Learning and it's working mechanisms. Each component of the application is discussed in detail including the components what were considered and tested, but are not a part of the final experimentation. Explanation of each design decisions are also provided in detail so as it make it easier for the reader to understand how the application developed over-time and reached it's final state. The FMLearn application will attempt to solve the issue of redundant work put in by developers to find the best algorithm and it's hyper-parameters over and over again for a previously solved / optimised dataset and possibility suggesting algorithms for a previously unseen dataset as well. If this is achieved, the users of this application and the community in general will be greatly benefited by saving time spent waiting for program to complete, electricity consumed on the running the machines and cooling them, the computational power expended over a repetitive task and money spent in all of the above, to find the best algorithm and it's hyper-parameter.
+This chapter provides details regarding the FMLearn application, implementation of the proposed concept, that is, Federated meta Learning and it's working mechanisms. Each component of the application is discussed in detail including the components that were considered and tested, but are not a part of the final experimentation. Explanation of each design decisions are also provided in detail so as it make it easier for the reader to understand how the application developed over-time and reached it's final state. The FMLearn application will attempt to solve the issue of redundant work put in by developers to find the best algorithm and it's hyper-parameters over and over again for a previously solved / optimised dataset and possibly suggesting algorithms for a previously unseen dataset as well. If this is achieved, the users of this application and the community in general will be greatly benefited by saving time spent waiting for program to complete, electricity consumed on the running the machines and cooling them, the computational power expended over a repetitive task and money spent in all of the above, to find the best algorithm and it's hyper-parameter.
 
-The design and implementation choices led to the development of a working prototype of the concept Federated Meta-Learning and the application FMLearn. The server was developed in Python and exposed the capabilities of the application as publicly available API's which uses a the standard JSON format for sending and receiving data / information. The concept of Federated Meta-Learning discussed in \ref{federated-meta-learning}
+The design and implementation choices led to the development of a working prototype of the concept Federated Meta-Learning and the application FMLearn. The server was developed in python and exposed the capabilities of the application. The concept of Federated Meta-Learning discussed in \ref{federated-meta-learning} and the changes in the workflow of a typical Machine Learning project which were caused due to the introduction of Federated Meta-Learning is discussed in section \ref{fml-workflow}. Then we discuss in detail about the prototype FMLearn which was built to demonstrate this concept under section \ref{fmlearn}, while discussing it's architecture design in section \ref{architecture} along with some design decisions in section \ref{design-decisioins} and why these were taken. We will also be discussing in detail about the Model built by FMLearn to predict / recommend the potentially best algorithm(s) for a given task along with it's workflow. In section \ref{scikit-learn} we will be discussing in detail about the modifications made to scikit-learn so that it can act as a client to FMLearn along with discussing the data description used.
 
-\section{Requirements}
+% \section{Requirements}
+
+% \section{High-Level Overview}
+
+\section{Federated Meta-Learning}
+\label{federated-meta-learning}
+Federated Meta-Learning, is a concept proposed by Dr. Joeran Beel in his article \citep{fml}, it is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
+
+The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
+
+In its simplest form, federated meta-learning would simply be a knowledge base or directory of algorithms-data performance measures. Ultimately, Federated Meta-Learning would be able to predict algorithm performance for unseen tasks.
+
+\section{Workflow of Federated Meta-Learning}
+\label{fml-workflow}
+
+From section \ref{workflow-automl}, we know that a typical algorithm selection and configuration task using the AutoML tools result in a repetitive and time consuming process which in turn eats up a lot of computing resources, electricity and money. To tackle this problem Dr. Joeran Beel proposed Federated Meta-Learning as seen in section \ref{federated-meta-learning}. When we take this concept and apply it to the current ecosystem of Machine Learning tasks we get a workflow as show in Figure \ref{fml-workflow-diagram}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=15cm]{images/FML Workflow.jpeg}
+    \caption{Federated Meta-Learning Workflow Diagram}
+    \label{fml-workflow-diagram}
+\end{figure}
+
+Let's go into detail about the workflow of Federated Meta-Learning, Initial steps of the workflow remain similar to the working of AutoML (as seen in section \ref{workflow-automl}). The data is split into training and testing datasets, the training dataset in first sent to the library for the purpose of model creation. Here, the dataset is pre-processed using various techniques like data-cleaning, data imputation, data encoding, feature selection, feature exploration, feature engineering, feature co-relation, etc.
+
+The difference between the 2 processes arise at the point when the data is obtained. The data apart from being sent to the library for pre-processing it is also sent to the Federated Meta-Learning application after finding the meta-features of the dataset. Once these meta-features are obtained Federated Meta-Learning predicts / recommends the potentially best performing algorithm(s) along with it's hyper-parameters for the given dataset. Once this recommendation is received by the Machine Learning library it re-optimises the algorithms and builds the model based on the training dataset which was received after pre-processing and this model is then evaluated against the testing dataset and then the final model is returned to the user.
+
+The major difference with the workflows described in Figure \ref{automl-workflow-diagram} (as seen in the Section \ref{workflow-automl} - Workflow of AutoML Libraries) and Figure \ref{fml-workflow-diagram} is the introduction of an external application which applies the concept of Federated Meta-Learning. This application results in the elimination of the repetitive nature of algorithm selection and configuration task, which would drastically reduce the time spent on such a task along with the computational resources, electricity and money spent here.
+
+\section{FMLearn}
+\label{fmlearn}
+FMLearn is an application which acts as a simple proof of concept of Federated Meta-Learning and it allows everyone to benefit from the data that is generated through machine learning and data science libraries.
+
+\subsection{Architecture Design}
+\label{architecture}
+
+\subsection{Design Decisions}
+\label{design-decisioins}
+
+\subsection{ML Algorithm}
+%%\subsubsection{Why this algo}
+%%\subsubsection{results of others}
+%%\subsubsection{comparison between other algos}
+\subsection{Workflow}
+
+\section{SciKit-Learn}
+\label{scikit-learn}
+
+\subsection{Auto-Sklearn Meta Features}
+\label{auto-sklearn}
+
+\subsection{Knowledge Base building}
+\label{knowledge-base}
+
 
 \begin{figure}[H]
     \centering
@@ -22,53 +76,11 @@ The design and implementation choices led to the development of a working protot
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=15cm]{images/ML Workflow.jpeg}
-    \caption{Machine Leaning Workflow Diagram}
-    \label{ml-workflow-diagram}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{images/FML Workflow.jpeg}
-    \caption{Federated Meta-Learning Workflow Diagram}
-    \label{fml-workflow-diagram}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
     \includegraphics[width=15cm]{images/Sequence Diagram.jpeg}
     \caption{Sequence Diagram}
     \label{sequence-diagram}
 \end{figure}
 
-\section{High-Level Overview}
-
-\section{Federated Meta-Learning}
-\label{federated-meta-learning}
-
-\section{SciKit-Learn}
-\label{scikit-learn}
-
-\subsection{Auto-Sklearn Meta Features}
-\label{auto-sklearn}
-
-\subsection{Knowledge Base building}
-\label{knowledge-base}
-
-\section{FMLearn}
-\label{fmlearn}
-
-\subsection{Architecture Design}
-\label{architecture}
-
-\subsection{Design Decisions}
-\label{design-decisioins}
-
-\subsection{ML Algorithm}
-%%\subsubsection{Why this algo}
-%%\subsubsection{results of others}
-%%\subsubsection{comparison between other algos}
-\subsection{Workflow}
 
 \section{Security and Privacy Concerns}
 FMLearn is a client-server architecture-based [2] application which provides public API’s for it's users, and it brings its own security and privacy concerns. The different aspects of security and privacy issues that are to be considered with respect to FMLearn are - but not limited to:

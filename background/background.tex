@@ -14,6 +14,20 @@ The task of Algorithm Configuration can be attributed to Hyper-Parameter Optimis
 
 There are various optimisation strategies, among them the commonly used strategies are: Grid search, Random search, Hill Climbing and Bayesian optimization. The working of these strategies are out of scope of this paper, but the important thing to note is that these strategies takes up a great deal of time, electricity and computational power, before a optimal set of hyper-parameter can be chosen for an algorithm-dataset pair.
 
+\section{Workflow of AutoML Libraries}
+\label{workflow-automl}
+
+In this section we will discuss about the workflow AutoML libraries without going to details about the internal workings of the algorithms or the libraries. The figure \ref{automl-workflow-diagram} represents the workflow of a typical AutoML project for a given task or dataset. The data is split into training and testing datasets, the training dataset in first sent to the library for the purpose of model creation. Here, the dataset is pre-processed using various techniques like data-cleaning, data imputation, data encoding, feature selection, feature exploration, feature engineering, feature co-relation, etc..
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=16cm]{images/ML Workflow.jpeg}
+    \caption{AutoML Workflow Diagram}
+    \label{automl-workflow-diagram}
+\end{figure}
+
+Once, the data has been pre-processed, the pre-processed dataset is split into a smaller subsets of the training dataset. One such subset is randomly chosen on which multiple algorithms are run to train and create a model for comparison and evaluation. Once the training and model creation of all chosen algorithms are completed, these models are evaluated based on multiple parameters one of which is there performance of an unseen data. When the performance metrics are calculated these models are evaluated and compared between each other and the best performing model is chosen for further training. Depending on the internal evaluation strategy of the AutoML tool used more than one algorithm can be chosen for further training. Once these model(s) are chosen they are trained on various configurations of hyper-parameters using one of these search strategies; Grid Search, Randomized Search, Bayesian Optimization, etc. Once these models are trained and there hyper-parameters are optimised on the complete training dataset, they are evaluated against the testing dataset and the final best performing model is returned to the user.
+
 \section{Project Overview}
 To tackle this repetitive and time consuming nature of these task, Dr. Joeran Beel proposed, what he called Federated Meta-Learning. Applying the concept of Federated Meta Learning, I have build an application called FMLearn to implement the same. Before explaining what the application is and what is does, some important information of this application are as follows. FMLearn is an application developed using the client-server model, which allows the exchange of meta-data about machine learning models and data for the purpose of meta-learned algorithm selection and configuration. In this Client-Server architecture the Client here is a popular Machine Learning package called Scikit-Learn which has been modified to the needs of the project. The client also enlists the help of another popular AutoML package for meta-data collection called Auto-Sklearn. 
 
