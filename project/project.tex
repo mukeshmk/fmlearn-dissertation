@@ -92,8 +92,74 @@ The server performs various roles depending on the task and is explained in Sect
 to build the model. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
 
 
-\section{The Client: SciKit-Learn}
+\section{The Client: Scikit-Learn}
 \label{scikit-learn}
+
+In this Client-Server Architecture, the stable release of the client i.e., modified version of scikit-learn is available on GitHub via the following link:
+\begin{center}
+\href{https://github.com/mukeshmk/scikit-learn/releases/latest}
+{\texttt{https://github.com/mukeshmk/scikit-learn/releases/latest}}.
+\end{center}
+
+The entire repo is available at: \href{https://github.com/mukeshmk/scikit-learn/}{\texttt{https://github.com/mukeshmk/scikit-learn/}} \newline which is forked from: \href{https://github.com/scikit-learn/scikit-learn}{\texttt{https://github.com/scikit-learn/scikit-learn}}.
+
+After downloading the stable release and installing the library by following the instructions specified in the \texttt{README.md} file, we can use it normally as we use scikit-learn, since it's a fork of the original release it has all the features of the stable release plus it has the features of FMLearn.
+
+To initialise \texttt{fmlearn}'s client we have to import the \texttt{FMLClient} package from \texttt{sklearn.fmlearn} and then create an object of the class \texttt{FMLClient} as follows:
+\begin{lstlisting}
+    # imports the FMLearn client into the program
+    from sklearn.fmlearn import FMLClient
+    # initialises the client
+    fmlearn = FMLClient()
+\end{lstlisting}
+
+Once the client as been initialised irrespective of the task the first thing to do would be do tell \texttt{FMLearn} what dataset we will be using for the task this can be done as follows:
+
+\begin{lstlisting}
+    # assuming that the import for train_test_split has been done
+    # and the data has been loaded and split into 'X' and 'y'
+    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=12)
+
+    # this is a function introduced by the Client to let FMLearn know 
+    # what dataset is being used for the task.
+    fmlearn.set_dataset(x_train, y_train, x_test, y_test)
+\end{lstlisting}
+
+Setting the dataset using the \texttt{sets\_dataset()} method triggers a background call to an external 3rd party library called Auto-Sklearn which is used to describe the Dataset and obtain the Meta-Features for that dataset. This is further explained in Section \ref{auto-sklearn}. These Meta-Features thus collected is then sent to the server to be processed as required.
+
+Depending on the objective of the user, he/she can proceed with the program in one of these two ways:
+\begin{enumerate}
+    \item Get recommendation for a task.
+    \item Publish performance data for a task.
+\end{enumerate}
+If he/she wants to get a recommendation for a task all they would have to do this to calls the methods \texttt{predict\_metric()} as follows.
+
+\begin{lstlisting}
+    # this method returns the recommendation of the
+    # best performing algorithm along with its hyper-parameters
+    # for the dataset set using the set_dataset() method
+    fmlearn.predict_metric()
+\end{lstlisting}
+
+This method provided by the client internally makes an API call to the server sending the server the Meta-Features of the dataset which was obtained from \texttt{auto-sklearn}. Upon reaching the server, the server processes the request, responding with the appropriate algorithm recommendation which is then sent to the user as shown in Figure \ref{sample-output}. The recommendation can then be used by the user to create a model with the specified algorithm and the hyper-parameter values. The created model can then be used by user to proceed with the task after re-optimising the parameters to suite the users dataset.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=9cm]{images/sample-output.png}
+    \caption{Sample Output}
+    \label{sample-output}
+\end{figure}
+
+If he/she wants to publish a performance metric for a task which they performed they can do so by using the \texttt{publish()} method by passing the model used, scoring metric and the score as it's parameters as follows:
+
+\begin{lstlisting}
+    # the `model` parameter contains the model trained using the dataset
+    # `fmlearn.ACCURACY` specifies the evaluation metric used
+    # the `score` parameter contains the evaluation results.
+    fmlearn.publish(model, fmlearn.ACCURACY, score)
+\end{lstlisting}
+
+Upon calling the client's \texttt{publish} method the meta-features of the dataset, model details including the algorithm name, hyper-parameters, along with the evaluation metric and the evaluation score are sent to the FMLearn server. This data is processed and stored in the database, which could later be used to build a model.
 
 \subsection{Auto-Sklearn Meta Features}
 \label{auto-sklearn}
@@ -112,6 +178,8 @@ to build the model. The details about the model and algorithm in general will be
 
 \subsection{KNN Model}
 \label{knn-model}
+
+\section{The Big Picture}
 
 \begin{figure}[H]
     \centering
