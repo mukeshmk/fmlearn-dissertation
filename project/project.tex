@@ -36,19 +36,63 @@ The major difference with the workflows described in Figure \ref{automl-workflow
 
 \section{FMLearn}
 \label{fmlearn}
-FMLearn is an application which acts as a simple proof of concept of Federated Meta-Learning and it allows everyone to benefit from the data that is generated through machine learning and data science libraries.
+FMLearn is an application which is a simple proof of concept of Federated Meta-Learning. FMLearn allows everyone to benefit from the data that is generated through machine learning and data science libraries. FMLearn is built using the Distributed Application Architecture (DAA), following the Client-Server Model. This allows the users to access as well as to exchange information and services with others. Though a Peer-To-Peer Model would be possible, this design was avoided due to the limitation in time as well as favouring the ease of development using the client-server model.
+
+FMLearn consists of a client which is in our case a modified version of the popular Machine Learning library Scikit-Learn, but it could be any machine learning library and the Server is a Python Flask Application which handles all API calls and Data Store requests made by the user. FMLearn also acts as a knowledge base storing all the algorithms-data performance measure collected though the machine learning library. The server also provides publicly available API's which can be accessed by any Machine Learning or Data Science tool to use FMLearn irrespective of the programming language used to build them to get a recommendation for the potentially best performing algorithm(s) and it’s hyper-parameters to solve it’s task without being constrained by the need to use the client that is supported by this paper (modified scikit-learn).
+
+\subsection{Design Decisions}
+\label{design-decisioins}
+A few important Design Decisions that need to be addressed before proceeding with further discussions are as follows:
+\begin{itemize}
+    \item Why Client-Server Model?
+    
+    The biggest design decision was taking in the early stages of the dissertation. A decision was taken to proceed with the Client-Server model rather than a Peer-To-Peer model with respect to the architecture design of the application. This was an "Experience Based Design" as I have prior experience working with Client-Server Application model and more importantly due to the limited availability of time and ease of development which cannot be achieved / provided when following a Peer-To-Peer architecture.
+
+    \item Why Scikit-Learn?
+    
+    Scikit-learn is a free software machine learning library for the Python programming language \citep{scikit-learn}. It is also among the popular and easy to use python libraries available in the market. Though other libraries with similar capabilities are available in the internet scikit-learn was chosen as an "Intuition Based Design" due to familiarity with the library and it's easy to use nature.
+    
+    \item Why a Public API Server?
+    
+    When Federated Meta-Learning was proposed by Dr. Joeran Beel \citep{fml}, he envisioned an ecosystem where everyone would benefit from the data that is generated though Machine Learning libraries and the prediction of the best performing algorithm along with it's hyper-parameters be available to all. A public API server ensures that even if the developers aren't using the supported client - modified scikit-learn - they can still benefit from the recommendations made by FMLearn.
+    
+    \item Why not a stand-alone client?
+    
+    A stand alone client was a possible aim for this dissertation, as the said client doesn't highly depend of the features provided by scikit-learn, though a few dependencies exists. But this idea was dropped due to limited availability of time and to concentrate on building and improving the server where the recommendations were to be made.
+    
+    \item Why Flask?
+    
+    Flask is a popular, extensible web micro-framework for building web applications with Python \citep{flask} and is among the most used web applications frameworks in python. It was choice between Django and Flask, and Flask was chosen because of ease of use in terms of quick development when compared to Django. This was a "Reference Based Design" decision and when trying out both frameworks it was easier to get things started with Flask as opposed to Django. It is also easy to deploy Flask on to a free hosting services like Heroku, for the application to go live.
+    
+    \item Why PostgreSQL?
+    
+    PostgreSQL is a free and open-source relational database management system. It is easy to use when compared to other options and most importantly as it is a widely used database it was also available as a database deployment option in various online hosting platforms such as Heroku.
+    
+\end{itemize}
+
+These are among the major design decisions made in the early stages of the dissertation which needed to be addressed before proceeding. Though other a few other design decisions were made during the process of development they will be explained as when we the appropriate section of the application is being explained.
 
 \subsection{Architecture Design}
 \label{architecture}
 
-\subsection{Design Decisions}
-\label{design-decisioins}
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=15cm]{images/FML Architecture Diagram.jpeg}
+    \caption{Architecture Diagram}
+    \label{architecture-diagram}
+\end{figure}
+
 
 \subsection{ML Algorithm}
 %%\subsubsection{Why this algo}
 %%\subsubsection{results of others}
 %%\subsubsection{comparison between other algos}
 \subsection{Workflow}
+
+\subsection{KNN Model}
+\label{knn-model}
 
 \section{SciKit-Learn}
 \label{scikit-learn}
@@ -65,13 +109,6 @@ FMLearn is an application which acts as a simple proof of concept of Federated M
     \includegraphics[width=15cm]{images/Class Diagram.jpeg}
     \caption{Class Diagram}
     \label{class-diagram}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{images/FML Architecture Diagram.jpeg}
-    \caption{Architecture Diagram}
-    \label{architecture-diagram}
 \end{figure}
 
 \begin{figure}[H]
