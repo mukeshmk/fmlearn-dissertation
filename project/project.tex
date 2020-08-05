@@ -14,7 +14,7 @@ Federated Meta-Learning, is a concept proposed by Dr. Joeran Beel in his article
 
 The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
 
-In its simplest form, federated meta-learning would simply be a knowledge base or directory of algorithms-data performance measures. Ultimately, Federated Meta-Learning would be able to predict algorithm performance for unseen tasks.
+In its simplest form, federated meta-learning would simply be a knowledge base or directory of algorithm-dataset performance measures. Ultimately, Federated Meta-Learning would be able to predict algorithm performance for unseen tasks.
 
 \section{Workflow of Federated Meta-Learning}
 \label{fml-workflow}
@@ -75,7 +75,9 @@ These are among the major design decisions made in the early stages of the disse
 \subsection{Architecture Design}
 \label{architecture}
 
+The figure \ref{architecture-diagram} describes the client-server architecture of the FMLearn application as a whole along with a few other components that haven't been discussed yet, these components will be introduced here and will be expanded upon later sections of this report. 
 
+From the Figure \ref{architecture-diagram} we can see that the entire application is divided into two major chunks the client and the server. The client here is the modified version of Scikit-Learn which is explained in Section \ref{scikit-learn} in detail. To which I have introduced an additional package called `\texttt{fmlearn}`. This package provides the user with the capability to the interact with the server. This package also functions as an important link to the intermediary step where the data description is obtained for a given dataset or task i.e., the dataset is converted into it's meta-features. The conversion of dataset to it's Meta-Features is handled by a 3rd party library called Auto-Sklearn \citep{feurer:m}. Auto-Sklearn is an external library and a dependency introduced here details about which will be further explained in Section \ref{auto-sklearn}.
 
 \begin{figure}[t]
     \centering
@@ -84,6 +86,23 @@ These are among the major design decisions made in the early stages of the disse
     \label{architecture-diagram}
 \end{figure}
 
+The client majorly performs 2 tasks, publishing the data to the server and displaying the results obtained for algorithm recommendation from the server to the user. Irrespective of the task, the \texttt{fmlearn} module obtains the dataset from the user and it is converted to it's Meta-Features with the help of Auto-Sklearn. Depending on the task the user might want a recommendation of the best performing algorithm or might want to contribute his findings to the betterment of the FMLearn in general. Depending on the use case either an API call is made to obtain the recommendation for the user or the model details along with the performance metrics is obtained from the user and the model directly and then an API call is made to publish these details to the server respectively.
+
+The server performs various roles depending on the task and is explained in Section \ref{fmlearn-server} in detail. The server primarily acts a recommender system, recommending algorithm(s) for a given task. The server also acts a knowledge base or directory of algorithm-dataset performance measures, apart from this is also provides API's to expand or build this knowledge base. This knowledge base is stored in a PostgreSQL Database and it also used to build a Machine Learning model, here I have used K-Nearest Neighbors algorithm
+to build the model. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
+
+
+\section{The Client: SciKit-Learn}
+\label{scikit-learn}
+
+\subsection{Auto-Sklearn Meta Features}
+\label{auto-sklearn}
+
+\subsection{Knowledge Base building}
+\label{knowledge-base}
+
+\section{The Server: FMLearn}
+\label{fmlearn-server}
 
 \subsection{ML Algorithm}
 %%\subsubsection{Why this algo}
@@ -93,16 +112,6 @@ These are among the major design decisions made in the early stages of the disse
 
 \subsection{KNN Model}
 \label{knn-model}
-
-\section{SciKit-Learn}
-\label{scikit-learn}
-
-\subsection{Auto-Sklearn Meta Features}
-\label{auto-sklearn}
-
-\subsection{Knowledge Base building}
-\label{knowledge-base}
-
 
 \begin{figure}[H]
     \centering
