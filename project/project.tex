@@ -1,8 +1,8 @@
 \chapter{Design and Implementation}
 
-This chapter provides details regarding the FMLearn application, implementation of the proposed concept, that is, Federated meta Learning and it's working mechanisms. Each component of the application is discussed in detail including the components that were considered and tested, but are not a part of the final experimentation. Explanation of each design decisions are also provided in detail so as it make it easier for the reader to understand how the application developed over-time and reached it's final state. The FMLearn application will attempt to solve the issue of redundant work put in by developers to find the best algorithm and it's hyper-parameters over and over again for a previously solved / optimised dataset and possibly suggesting algorithms for a previously unseen dataset as well. If this is achieved, the users of this application and the community in general will be greatly benefited by saving time spent waiting for program to complete, electricity consumed on the running the machines and cooling them, the computational power expended over a repetitive task and money spent in all of the above, to find the best algorithm and it's hyper-parameter.
+This chapter provides details regarding the FMLearn application, implementation of the proposed concept, that is, Federated meta Learning and it's working mechanisms. Each component of the application is discussed in detail including the components that were considered and tested, but are not a part of the final experimentation. Explanation of all the design decisions are provided in detail so as it make it easier for the reader to understand how the application developed over-time and reached it's final state. The FMLearn application attempts to solve the issue of redundant work put in by developers to find the best algorithm and it's hyper-parameters repeatedly for a previously solved / optimised dataset and possibly suggesting algorithms for a previously unseen dataset as well. If this is achieved, the users of this application and the community in general will be greatly benefited by saving time spent waiting for program to complete, electricity consumed on the running the machines and cooling them, the computational power expended over a repetitive task and money spent in all of the above, to find the best algorithm and it's hyper-parameter.
 
-The design and implementation choices led to the development of a working prototype of the concept Federated Meta-Learning and the application FMLearn. The server was developed in python and exposed the capabilities of the application. The concept of Federated Meta-Learning discussed in \ref{federated-meta-learning} and the changes in the workflow of a typical Machine Learning project which were caused due to the introduction of Federated Meta-Learning is discussed in section \ref{fml-workflow}. Then we discuss in detail about the prototype FMLearn which was built to demonstrate this concept under section \ref{fmlearn}, while discussing it's architecture design in section \ref{architecture} along with some design decisions in section \ref{design-decisioins} and why these were taken. We will also be discussing in detail about the Model built by FMLearn to predict / recommend the potentially best algorithm(s) for a given task along with it's workflow. In section \ref{scikit-learn} we will be discussing in detail about the modifications made to scikit-learn so that it can act as a client to FMLearn along with discussing the data description used.
+The design and implementation choices led to the development of a working prototype of the concept Federated Meta-Learning and the application FMLearn. The server was developed in python and is used to portray the capabilities of the application. The concept of Federated Meta-Learning discussed in \ref{federated-meta-learning} and the changes in the workflow of a typical Machine Learning project caused due to the introduction of Federated Meta-Learning is discussed in section \ref{fml-workflow}. Then we discuss in detail the prototype FMLearn which was built to demonstrate this concept under section \ref{fmlearn}, while discussing it's architecture design in section \ref{architecture} along with some design decisions in section \ref{design-decisioins} and why these were taken. We will also be discussing in detail about the Model built by FMLearn to predict / recommend the potentially best algorithm(s) for a given task along with it's workflow. In section \ref{scikit-learn} we will be discussing in detail about the modifications made to scikit-learn so that it can act as a client to FMLearn along with discussing the data description used.
 
 % \section{Requirements}
 
@@ -10,7 +10,7 @@ The design and implementation choices led to the development of a working protot
 
 \section{Federated Meta-Learning}
 \label{federated-meta-learning}
-Federated Meta-Learning, is a concept proposed by Dr. Joeran Beel in his article \citep{fml}, it is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
+Federated Meta-Learning, is a concept proposed by Dr. Joeran Beel in his article \citep{fml}. It is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
 
 The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
 
@@ -38,7 +38,7 @@ The major difference with the workflows described in Figure \ref{automl-workflow
 \label{fmlearn}
 FMLearn is an application which is a simple proof of concept of Federated Meta-Learning. FMLearn allows everyone to benefit from the data that is generated through machine learning and data science libraries. FMLearn is built using the Distributed Application Architecture (DAA), following the Client-Server Model. This allows the users to access as well as to exchange information and services with others. Though a Peer-To-Peer Model would be possible, this design was avoided due to the limitation in time as well as favouring the ease of development using the client-server model.
 
-FMLearn consists of a client which is in our case a modified version of the popular Machine Learning library Scikit-Learn, but it could be any machine learning library and the Server is a Python Flask Application which handles all API calls and Data Store requests made by the user. FMLearn also acts as a knowledge base storing all the algorithms-data performance measure collected though the machine learning library. The server also provides publicly available API's which can be accessed by any Machine Learning or Data Science tool to use FMLearn irrespective of the programming language used to build them to get a recommendation for the potentially best performing algorithm(s) and it’s hyper-parameters to solve it’s task without being constrained by the need to use the client that is supported by this paper (modified scikit-learn).
+FMLearn consists of a client which is in our case a modified version of the popular Machine Learning library Scikit-Learn, but it could be any machine learning library and the Server is a Python Flask Application which handles all API calls and Data Store requests made by the user. FMLearn also acts as a knowledge base, storing all the algorithms-data performance measure collected though the machine learning library. The server also provides publicly available API's which can be accessed by any Machine Learning or Data Science tool to use FMLearn irrespective of the programming language used to build them to get a recommendation for the potentially best performing algorithm(s) and it’s hyper-parameters to solve it’s task without being constrained by the need to use the client that is supported by this paper (modified scikit-learn).
 
 \subsection{Design Decisions}
 \label{design-decisioins}
@@ -46,7 +46,7 @@ A few important Design Decisions that need to be addressed before proceeding wit
 \begin{itemize}
     \item Why Client-Server Model?
     
-    The biggest design decision was taking in the early stages of the dissertation. A decision was taken to proceed with the Client-Server model rather than a Peer-To-Peer model with respect to the architecture design of the application. This was an "Experience Based Design" as I have prior experience working with Client-Server Application model and more importantly due to the limited availability of time and ease of development which cannot be achieved / provided when following a Peer-To-Peer architecture.
+    The biggest design decision was taken in the early stages of the dissertation. A decision was taken to proceed with the Client-Server model rather than a Peer-To-Peer model with respect to the architecture design of the application. This was an "Experience Based Design" as I have prior experience working with Client-Server Application model and more importantly due to the limited availability of time and ease of development which cannot be achieved / provided when following a Peer-To-Peer architecture.
 
     \item Why Scikit-Learn?
     
@@ -62,7 +62,7 @@ A few important Design Decisions that need to be addressed before proceeding wit
     
     \item Why Flask?
     
-    Flask is a popular, extensible web micro-framework for building web applications with Python \citep{flask} and is among the most used web applications frameworks in python. It was choice between Django and Flask, and Flask was chosen because of ease of use in terms of quick development when compared to Django. This was a "Reference Based Design" decision and when trying out both frameworks it was easier to get things started with Flask as opposed to Django. It is also easy to deploy Flask on to a free hosting services like Heroku, for the application to go live.
+    Flask is a popular, extensible web micro-framework for building web applications with Python \citep{flask} and is among the most used web applications frameworks in python. It was a choice between Django and Flask, and Flask was chosen because of ease of use in terms of quick development when compared to Django. This was a "Reference Based Design" decision and when trying out both frameworks it was easier to get things started with Flask as opposed to Django. It is also easy to deploy Flask on to a free hosting services like Heroku, for the application to go live.
     
     \item Why PostgreSQL?
     
@@ -88,8 +88,7 @@ From the Figure \ref{architecture-diagram} we can see that the entire applicatio
 
 The client majorly performs 2 tasks, publishing the data to the server and displaying the results obtained for algorithm recommendation from the server to the user. Irrespective of the task, the \texttt{fmlearn} module obtains the dataset from the user and it is converted to it's Meta-Features with the help of Auto-Sklearn. Depending on the task the user might want a recommendation of the best performing algorithm or might want to contribute his findings to the betterment of the FMLearn in general. Depending on the use case either an API call is made to obtain the recommendation for the user or the model details along with the performance metrics is obtained from the user and the model directly and then an API call is made to publish these details to the server respectively.
 
-The server performs various roles depending on the task and is explained in Section \ref{fmlearn-server} in detail. The server primarily acts a recommender system, recommending algorithm(s) for a given task. The server also acts a knowledge base or directory of algorithm-dataset performance measures, apart from this is also provides API's to expand or build this knowledge base. This knowledge base is stored in a PostgreSQL Database and it also used to build a Machine Learning model, here I have used K-Nearest Neighbors algorithm
-to build the model. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
+The server performs various roles depending on the task and is explained in Section \ref{fmlearn-server} in detail. The server primarily acts a recommender system, recommending algorithm(s) for a given task. The server also acts a knowledge base or directory of algorithm-dataset performance measures, apart from this is also provides API's to expand or build this knowledge base. This knowledge base is stored in a PostgreSQL Database and it also used to build a Machine Learning model, The model was built using the K-Nearest Neighbors algorithm. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
 
 
 \section{The Client: Scikit-Learn}
@@ -127,12 +126,12 @@ Once the client as been initialised irrespective of the task the first thing to 
 
 Setting the dataset using the \texttt{sets\_dataset()} method triggers a background call to an external 3rd party library called Auto-Sklearn which is used to describe the Dataset and obtain the Meta-Features for that dataset. This is further explained in Section \ref{auto-sklearn}. These Meta-Features thus collected is then sent to the server to be processed as required.
 
-Depending on the objective of the user, he/she can proceed with the program in one of these two ways:
+Depending on the objective of the user, the user can proceed with the program in one of these two ways:
 \begin{enumerate}
     \item Get recommendation for a task.
     \item Publish performance data for a task.
 \end{enumerate}
-If he/she wants to get a recommendation for a task all they would have to do this to calls the methods \texttt{predict\_metric()} as follows.
+If the user wants to get a recommendation for a task all they would have to do this to calls the methods \texttt{predict\_metric()} as follows.
 
 \begin{lstlisting}
     # this method returns the recommendation of the
@@ -150,7 +149,7 @@ This method provided by the client internally makes an API call to the server se
     \label{sample-output}
 \end{figure}
 
-If he/she wants to publish a performance metric for a task which they performed they can do so by using the \texttt{publish()} method by passing the model used, scoring metric and the score as it's parameters as follows:
+If the user wants to publish a performance metric for a task which they performed, the user can do so by using the \texttt{publish()} method by passing the model used, scoring metric and the score as it's parameters as follows:
 
 \begin{lstlisting}
     # the `model` parameter contains the model trained using the dataset
