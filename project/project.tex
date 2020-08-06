@@ -159,10 +159,21 @@ If he/she wants to publish a performance metric for a task which they performed 
     fmlearn.publish(model, fmlearn.ACCURACY, score)
 \end{lstlisting}
 
-Upon calling the client's \texttt{publish} method the meta-features of the dataset, model details including the algorithm name, hyper-parameters, along with the evaluation metric and the evaluation score are sent to the FMLearn server. This data is processed and stored in the database, which could later be used to build a model.
+Upon calling the client's \texttt{publish} method the meta-features of the dataset, model details including the algorithm name, hyper-parameters, along with the evaluation metric and the evaluation scores are sent to the FMLearn server. This data is processed and stored in the database, which is later be used to build a model.
 
-\subsection{Auto-Sklearn Meta Features}
+\subsection{Data Description: Auto-Sklearn}
 \label{auto-sklearn}
+
+Auto-sklearn \citep{feurer:m} is an open-source AutoML tool written in Python that automatically determines effective machine learning pipelines for classification and regression datasets. Though this is an AutoML tool, it was used here for it's \textbf{meta-learning} step in the AutoML pipeline, which it uses to warm start the Bayesian optimization procedure in it's core. This meta-learning step is abstracted inside all the features provided by the tool and is not easily available to the users to use outside the tool.
+
+An utility package was introduced inside the FMLearn's client to make use of the meta-learning feature provided by auto-sklearn. This utility function performs the input checks, transforms the data and performs the required validations before passing on the dataframe to Auto-Sklearn's calculate meta-features method. It is available in this package via the imported method.
+
+\begin{lstlisting}
+            from autosklearn.metalearning.metafeatures.metafeatures 
+            import calculate_all_metafeatures_with_labels
+\end{lstlisting}
+
+The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is the dataset and the output is a set of meta-features. These meta-features are then converted into the required format and then forwarded to server via API calls. A few of the meta-features thus obtained are: \texttt{ClassEntropy, ClassProbabilityMean, NumberOfMissingValues, NumberOfCategoricalFeatures, NumberOfNumericFeatures, etc}. Depending on the dataset there can be about 24-30 meta-features obtained for a given dataset. For the complete list of meta-features and to see a few examples of values obtained via the Auto-Sklearn took please refer Appendix \ref{meta-features-ask}.
 
 \subsection{Knowledge Base building}
 \label{knowledge-base}
