@@ -10,7 +10,7 @@ The design and implementation choices led to the development of a working protot
 
 \section{Federated Meta-Learning}
 \label{federated-meta-learning}
-Federated Meta-Learning, is a concept proposed by Dr. Joeran Beel in his article \citep{fml}. It is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
+Federated Meta-Learning, is a concept proposed by Beel \citep{fml}. It is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
 
 The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
 
@@ -91,7 +91,7 @@ The client majorly performs 2 tasks, publishing the data to the server and displ
 The server performs various roles depending on the task and is explained in Section \ref{fmlearn-server} in detail. The server primarily acts a recommender system, recommending algorithm(s) for a given task. The server also acts a knowledge base or directory of algorithm-dataset performance measures, apart from this is also provides API's to expand or build this knowledge base. This knowledge base is stored in a PostgreSQL Database and it also used to build a Machine Learning model, The model was built using the K-Nearest Neighbors algorithm. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
 
 
-\section{The Client: Scikit-Learn}
+\section{The Client: modified Scikit-Learn}
 \label{scikit-learn}
 
 In this Client-Server Architecture, the stable release of the client i.e., modified version of scikit-learn is available on GitHub via the following link:
@@ -165,14 +165,21 @@ Upon calling the client's \texttt{publish} method the meta-features of the datas
 
 Auto-sklearn \citep{feurer:m} is an open-source AutoML tool written in Python that automatically determines effective machine learning pipelines for classification and regression datasets. Though this is an AutoML tool, it was used here for it's \textbf{meta-learning} step in the AutoML pipeline, which it uses to warm start the Bayesian optimization procedure in it's core. This meta-learning step is abstracted inside all the features provided by the tool and is not easily available to the users to use outside the tool.
 
-An utility package was introduced inside the FMLearn's client to make use of the meta-learning feature provided by auto-sklearn. This utility function performs the input checks, transforms the data and performs the required validations before passing on the dataframe to Auto-Sklearn's calculate meta-features method. It is available in this package via the imported method.
+An utility package was introduced inside the FMLearn's client (modified Scikit-Learn) to make use of the meta-learning feature provided by auto-sklearn. This utility function performs the input checks, transforms the data and performs the required validations before passing on the dataframe to Auto-Sklearn's calculate meta-features method. It is available in this package via the imported method.
 
 \begin{lstlisting}
             from autosklearn.metalearning.metafeatures.metafeatures 
             import calculate_all_metafeatures_with_labels
 \end{lstlisting}
 
-The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is the dataset and the output is a set of meta-features. These meta-features are then converted into the required format and then forwarded to server via API calls. A few of the meta-features thus obtained are: \texttt{ClassEntropy, ClassProbabilityMean, NumberOfMissingValues, NumberOfCategoricalFeatures, NumberOfNumericFeatures, etc}. Depending on the dataset there can be about 24-30 meta-features obtained for a given dataset. For the complete list of meta-features and to see a few examples of values obtained via the Auto-Sklearn took please refer Appendix \ref{meta-features-ask}.
+The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is the dataset and the output is a set of meta-features. These meta-features are then converted into the required format and then forwarded to server via API calls. A few of the meta-features thus obtained are: \texttt{ClassEntropy, ClassProbabilityMean, NumberOfMissingValues, NumberOfCategoricalFeatures, NumberOfNumericFeatures, etc}. Depending on the dataset there can be about 24-30 meta-features obtained for a given dataset. For the complete list of meta-features and to see a few examples of values obtained via the Auto-Sklearn took please refer Appendix \ref{meta-features-ask}. The end user is abstracted away from existence of this feature, the call to auto-sklearn is handled internally by the client upon letting the client know about the dataset in use.
+
+\begin{lstlisting}
+    # this is a method provided by the FMLearn client that internally calls
+    # `calculate_all_metafeatures_with_labels()` method provided by auto-sklearn
+    # which provides the meta-features required.
+    fmlearn.set_dataset(x_train, y_train, x_test, y_test)
+\end{lstlisting}
 
 \subsection{Knowledge Base building}
 \label{knowledge-base}
