@@ -181,6 +181,8 @@ The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is
     fmlearn.set_dataset(x_train, y_train, x_test, y_test)
 \end{lstlisting}
 
+Before finalising with \texttt{auto-sklearn} another library by Hadi called \texttt{dataset2vec} \citep{dataset2vec} was explored and evaluated for it's effectiveness in model building. This library represents a tabular dataset in a hierarchical fashion by defining a dataset as a set of features, where each feature is a set of instance values. Working with this library proved to be quite challenging due to the lack of documentation and lack of pre-trained model which converts the dataset to it's meta-features and thus making it necessary for the user to train a model. Though this paper claimed to out-perform the current state-of-the-art, a design decision was made to not use \texttt{dataset2vec} and instead proceed with \texttt{auto-sklearn} as a model was available and also a support by the community to improve the meta-feature extraction model.
+
 \section{The Server: FMLearn}
 \label{fmlearn-server}
 
@@ -229,7 +231,7 @@ The \texttt{publish} API solves the problem with the workflow of machine learnin
 
 This data is validated, preprocessed and stored in the database. A PostgreSQL database used in this application which contains 3 tables to store the information received from the client. These tables are structured as follows as shown in Figure \ref{class-diagram}. The three tables are \texttt{Metric}, \texttt{Meta Feature} and \texttt{Params}, the \texttt{Metric} table has a one to many relation ship with both the \texttt{Meta Feature} and \texttt{Params} tables and this relationship puts the database in it's 3rd Normal Form.
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{images/Class Diagram.jpeg}
     \caption{Class Diagram}
@@ -238,20 +240,58 @@ This data is validated, preprocessed and stored in the database. A PostgreSQL da
 
 This database thus created acts as a knowledge base which contains information about the algorithm-data performance metrics. FMLearn also provides others API's to access this data which enables sharing of performance details of various algorithms among software libraries. The response of this API when there are no internal errors is a JSON object similar to the request object with a HTTP status code of 200.
 
+The \texttt{predict} API solves the problem with the repetitive nature of the workflow of machine learning libraries, where the algorithm selection and hyper-parameter optimization tasks have to been done repeatedly. The \texttt{predict} API can be called by the machine learning libraries as done in the modified scikit-learn presented in this paper and thus breaking the cycle and saving time, electricity, computation power and money. The API is a \texttt{GET} method which can be accessed via this endpoint \texttt{/metric/predict} and the API accepts a JSON object as input which is similar to the below format:
 
+\begin{lstlisting}
+# the input JSON object to predict API
+{
+	"dataset_hash": dataset_hash,
+	"meta_features": [
+		{
+			"feat_name": feature_name,
+			"feat_value": feature_value
+		}
+	],
+	"target_type": target_type
+}
+# NOTE: the key "meta_features" accepts a list of objects
+# but for illustration purpose only 1 item has been shown.
+\end{lstlisting}
 
+This input is validated, preprocessed and then sent to the model for the best algorithm prediction (this is discussed in detail in Section \ref{knn-model}) and the result of the prediction is sent to the user as the best algorithm recommendation for the given task. This response is a JSON object in the following format:
 
-\subsection{Knowledge Base building}
-\label{knowledge-base}
+\begin{lstlisting}
+# the output JSON object of predict API
+{
+  "recommendations": [
+    {
+      "algorithm_name": algorithm_name,
+      "metric_name": metric_name,
+      "metric_value": metric_value,
+      "params": [
+        {
+          "param_name": hyper_parameter_name,
+          "param_value": hyper_parameter_value
+        }
+      ],
+      "target_type": target_type
+    }
+  ]
+}
+# NOTE: "recommendations and params" are a list of objects
+# but for illustration purpose only 1 item has been shown.
+\end{lstlisting}
 
-\subsection{ML Algorithm}
-%%\subsubsection{Why this algo}
-%%\subsubsection{results of others}
-%%\subsubsection{comparison between other algos}
-\subsection{Workflow}
+\subsection{Model Building}
+\label{model-building}
 
-\subsection{KNN Model}
+Using FMLearn what I am trying to achieve is to try and find the closest existing dataset which is very similar to the dataset for which an algorithm is to be recommended. Then recommend the best performing algorithm for the requested dataset based on the existing data. I am not trying to predict the best performing algorithm, this is an important point to be noted in the algorithm recommendation process. Prediction of an algorithm using a model might not be feasible as there are various types of algorithms classification, regression and clustering just to name a few and various algorithms within each type of problem, various performances and on top of this it will be a multi-class output problem. This problem will be trying to predict algorithm name, metric used, metric value, and not to mention the parameters of an algorithm. This will result in a lot of mismatch in the output making the prediction a random set of values. Thus predicting the closest existing dataset for the input dataset and then finding the best algorithm for that dataset is the best possible approach in the scenario.
+
+\subsection{KNN Algorithm}
 \label{knn-model}
+
+The algorithm used to predict or recommend the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised 
+
 
 \section{The Big Picture}
 
