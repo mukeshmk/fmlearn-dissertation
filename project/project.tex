@@ -10,7 +10,7 @@ The design and implementation choices led to the development of a working protot
 
 \section{Federated Meta-Learning}
 \label{federated-meta-learning}
-Federated Meta-Learning, is a concept proposed by Beel \citep{fml}. It is a concept that allows everyone to benefit from the data that is generated through Machine Learning libraries. Federated Meta Learning focuses on learning algorithm performance measures for arbitrary tasks. He envisioned federated meta learning as an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
+Federated Meta-Learning focuses on learning algorithm performance measures for arbitrary tasks. Essentially federated meta learning is an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
 
 The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
 
@@ -100,7 +100,7 @@ In this Client-Server Architecture, the stable release of the client i.e., modif
 {\texttt{https://github.com/mukeshmk/scikit-learn/releases/latest}}.
 \end{center}
 
-The entire repo is available at: \href{https://github.com/mukeshmk/scikit-learn/}{\texttt{https://github.com/mukeshmk/scikit-learn/}} \newline which is forked from: \href{https://github.com/scikit-learn/scikit-learn}{\texttt{https://github.com/scikit-learn/scikit-learn}}.
+The complete code repository is available at: \href{https://github.com/mukeshmk/scikit-learn/}{\texttt{https://github.com/mukeshmk/scikit-learn/}} \newline which is forked from: \href{https://github.com/scikit-learn/scikit-learn}{\texttt{https://github.com/scikit-learn/scikit-learn}}.
 
 After downloading the stable release and installing the library by following the instructions specified in the \texttt{README.md} file, we can use it normally as we use scikit-learn, since it's a fork of the original release it has all the features of the stable release plus it has the features of FMLearn.
 
@@ -181,11 +181,68 @@ The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is
     fmlearn.set_dataset(x_train, y_train, x_test, y_test)
 \end{lstlisting}
 
-\subsection{Knowledge Base building}
-\label{knowledge-base}
-
 \section{The Server: FMLearn}
 \label{fmlearn-server}
+
+The stable release of the server - FMLearn in this Client-Server Architecture is available on GitHub via the following link:
+
+\begin{center}
+\href{https://github.com/mukeshmk/fm-learn/releases/latest}
+{\texttt{https://github.com/mukeshmk/fm-learn/releases/latest}}.
+\end{center}
+
+The complete code repository is availabe at: \href{https://github.com/mukeshmk/fm-learn}{https://github.com/mukeshmk/fm-learn}. The application is also deployed on Heroku. Heroku is a platform as a service (PaaS) that enables FMLearn to available on the cloud to be accessed by everyone. The application is deployed and available via the link mentioned below, though this is an API server a basic user-interface has been developed so as to provide information about Federated Meta-Learning and API documentation.
+
+\begin{center}
+\href{https://fmlearn.herokuapp.com/}
+{\texttt{https://fmlearn.herokuapp.com/}}.
+\end{center}
+
+The server provides several API's among which two of the important API's are the \texttt{publish} and \texttt{predict} API's. These API's represent the two important functionalities of the proposed prototype. 
+
+The \texttt{publish} API solves the problem with the workflow of machine learning and data science libraries. These libraries usually work in isolation and the information regarding how an algorithm performs on a particular dataset is neither publisher nor shared. The publish API can be called from within these libraries as done in the modified scikit-learn presented and thus enabling the users to share the algorithm performance data. The API is a \texttt{POST} method which can be accessed via this endpoint \texttt{/metric} and takes a JSON object as input in this format:
+
+\begin{lstlisting}
+# the input JSON object to publish API
+{
+	"algorithm_name": algorithm_name,
+	"dataset_hash": dataset_hash,
+	"meta_features": [
+		{
+			"feat_name": feature_name,
+			"feat_value": feature_value
+		}
+	],
+	"metric_name": metric_name,
+	"metric_value": metric_value,
+	"params": [
+		{
+			"param_name": hyper_parameter_name,
+			"param_value": hyper_parameter_value
+		}
+	],
+	"target_type": target_type
+}
+# NOTE: "meta_features and params" are a list of objects
+# but for illustration purpose only 1 item has been shown.
+\end{lstlisting}
+
+This data is validated, preprocessed and stored in the database. A PostgreSQL database used in this application which contains 3 tables to store the information received from the client. These tables are structured as follows as shown in Figure \ref{class-diagram}. The three tables are \texttt{Metric}, \texttt{Meta Feature} and \texttt{Params}, the \texttt{Metric} table has a one to many relation ship with both the \texttt{Meta Feature} and \texttt{Params} tables and this relationship puts the database in it's 3rd Normal Form.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=15cm]{images/Class Diagram.jpeg}
+    \caption{Class Diagram}
+    \label{class-diagram}
+\end{figure}
+
+This database thus created acts as a knowledge base which contains information about the algorithm-data performance metrics. FMLearn also provides others API's to access this data which enables sharing of performance details of various algorithms among software libraries. The response of this API when there are no internal errors is a JSON object similar to the request object with a HTTP status code of 200.
+
+
+
+
+\subsection{Knowledge Base building}
+\label{knowledge-base}
 
 \subsection{ML Algorithm}
 %%\subsubsection{Why this algo}
@@ -198,12 +255,7 @@ The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is
 
 \section{The Big Picture}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=15cm]{images/Class Diagram.jpeg}
-    \caption{Class Diagram}
-    \label{class-diagram}
-\end{figure}
+
 
 \begin{figure}[H]
     \centering
