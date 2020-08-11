@@ -282,15 +282,15 @@ This input is validated, preprocessed and then sent to the model for the best al
 # but for illustration purpose only 1 item has been shown.
 \end{lstlisting}
 
-\subsection{Model Building}
-\label{model-building}
-
-Using FMLearn what I am trying to achieve is to try and find the closest existing dataset which is very similar to the dataset for which an algorithm is to be recommended. Then recommend the best performing algorithm for the requested dataset based on the existing data. I am not trying to predict the best performing algorithm, this is an important point to be noted in the algorithm recommendation process. Prediction of an algorithm using a model might not be feasible as there are various types of algorithms classification, regression and clustering just to name a few and various algorithms within each type of problem, various performances and on top of this it will be a multi-class output problem. This problem will be trying to predict algorithm name, metric used, metric value, and not to mention the parameters of an algorithm. This will result in a lot of mismatch in the output making the prediction a random set of values. Thus predicting the closest existing dataset for the input dataset and then finding the best algorithm for that dataset is the best possible approach in the scenario.
-
 \subsection{KNN Algorithm}
 \label{knn-model}
 
-The algorithm used to predict or recommend the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised 
+The goal is to use FMLearn to try and find the closest existing dataset which is very similar to the dataset for which an algorithm is to be recommended. Then recommend the best performing algorithm for the requested dataset based on the existing data. I am not trying to predict the best performing algorithm, this is an important point to be noted in the algorithm recommendation process. Prediction of an algorithm using a model might not be feasible as there are various types of algorithms classification, regression and clustering just to name a few and various algorithms within each type of problem, various performances and on top of this it will be a multi-class output problem. This problem will be trying to predict algorithm name, metric used, metric value, and not to mention the parameters of an algorithm. This will result in a lot of mismatch in the output making the prediction a random set of values. Thus predicting the closest existing dataset for the input dataset and then finding the best algorithm for that dataset is the best possible approach in the scenario.
+
+The algorithm used to predict or recommend the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised, non parametric learning algorithm, meaning, the target variable is known and that it does not make an assumption about the underlying data distribution pattern. In the case of FMLearn, a KNN classification algorithm has been used with k=1 and the distance between points is calculated using Euclidean distance. The "K" in KNN is the number of nearest neighbors considered before labeling the current point or in terms of FMLearn number of datasets that has 
+
+\subsection{Model Building}
+\label{model-building}
 
 
 \section{The Big Picture}
