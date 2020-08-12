@@ -285,9 +285,27 @@ This input is validated, preprocessed and then sent to the model for the best al
 \subsection{KNN Algorithm}
 \label{knn-model}
 
-The goal is to use FMLearn to try and find the closest existing dataset which is very similar to the dataset for which an algorithm is to be recommended. Then recommend the best performing algorithm for the requested dataset based on the existing data. I am not trying to predict the best performing algorithm, this is an important point to be noted in the algorithm recommendation process. Prediction of an algorithm using a model might not be feasible as there are various types of algorithms classification, regression and clustering just to name a few and various algorithms within each type of problem, various performances and on top of this it will be a multi-class output problem. This problem will be trying to predict algorithm name, metric used, metric value, and not to mention the parameters of an algorithm. This will result in a lot of mismatch in the output making the prediction a random set of values. Thus predicting the closest existing dataset for the input dataset and then finding the best algorithm for that dataset is the best possible approach in the scenario.
+The goal is to use FMLearn to try and find the closest existing dataset which is very similar to the dataset for which an algorithm is to be recommended. Then recommending best performing algorithm for the requested dataset is based on the closest existing dataset. FMLearn doesn't try to predict the best performing algorithm rather tries predicting the closest dataset, this is an important point to be noted in the algorithm recommendation process. Prediction of an algorithm along with there hyper-parameters using a machine learning model might not be feasible as there are various types of machine learning problems like classification, regression and clustering just to name a few. These problem types employ various algorithms within each type which have varying performances and the resulting model will be a multi-class output problem. This problem will be trying to predict algorithm name, metric used, metric value, and not to mention the parameters of an algorithm. This will result in a lot of mismatch with the hyper-parameter suggestion and the output recommended with just be a random set of values. This might become feasible given the existence of a huge dataset and a complicated neural network, but gather this data is out of scope of this dissertation. Here, in this dissertation we are building the first proof of concept for Federated Meta-Learning. Thus predicting the closest existing dataset for the input dataset and then finding the best algorithm for that dataset is the best possible approach in the given scenario.
 
-The algorithm used to predict or recommend the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised, non parametric learning algorithm, meaning, the target variable is known and that it does not make an assumption about the underlying data distribution pattern. In the case of FMLearn, a KNN classification algorithm has been used with k=1 and the distance between points is calculated using Euclidean distance. The "K" in KNN is the number of nearest neighbors considered before labeling the current point or in terms of FMLearn number of datasets that has 
+The algorithm used to make prediction or recommendation of the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised, non parametric learning algorithm, meaning, the target variable is known and that it does not make an assumption about the underlying data distribution pattern. In the case of FMLearn, a KNN classification algorithm has been used with k=1 and the distance between points is calculated using Euclidean distance. The "K" in KNN is the number of nearest neighbors to which the given input point must be the closest to before labeling the input point. In terms of FMLearn, "K" represents the number of datasets that the input dataset has to be closest to. Since we want to find one dataset to which the input dataset is closest to we are setting the value of "k=1". 
+
+Recommending the best algorithm falls into 3 different possibilities based on the closes of the input dataset, which can be categorised as follows:
+\begin{itemize}
+    \item Previously known dataset.
+    
+    In the case of a previously known dataset for which the best algorithm is also known, the distance between the points is 0 units, thus making the predictions 100\% accurate.
+    
+    \item Previously unknown dataset, which is similar to a known dataset.
+    
+    Whereas, for previously unknown dataset which is highly similar to known dataset the prediction of algorithm is accurate but the hyper-parameters require re-optimisation to suite the new dataset.
+    
+    \item Previously unknown dataset, which is dissimilar to a known dataset.
+    
+    But, in the case of an unknown dataset which is highly dissimilar to a known dataset, the model is able to predict the type machine learning problem the dataset belongs to, but not the best algorithm for it, it instead recommends a set of algorithms which it thinks are the best in this case instead of recommending a single algorithm.
+    
+\end{itemize}
+
+   
 
 \subsection{Model Building}
 \label{model-building}
