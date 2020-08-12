@@ -64,6 +64,7 @@
 
 \usepackage{listings}
 \usepackage{color}
+\usepackage{ragged2e}
 
 \pagestyle{plain} % Embrace simplicity!
 
@@ -125,6 +126,24 @@
 \frontmatter
 \begin{document}
 \input{title/title.tex}
+
+
+%%%
+%%% Set up page layout parameters.
+%%%
+\setlength\paperheight{297mm}
+\setlength\paperwidth{210mm}
+
+\setlength{\textheight}{235mm} %{8in}- 1/4"        BKay
+\setlength{\oddsidemargin}{10mm}  %{0.5in} + 1/8" BKay
+\setlength{\evensidemargin}{10mm} %{0.5in}        BKay
+\setlength{\textwidth}{155mm}
+%\setlength{\topmargin}{0.62in} %{0.5in}+1/8"        BKay
+%\setlength{\headheight}{0in}
+%\setlength{\headsep}{0in}
+%\setlength{\parindent}{12mm}
+
+
 \pagenumbering{roman}
 \section*{\Huge{Declaration}}
 \vspace{1cm}
@@ -157,6 +176,7 @@ Signed:~\rule{5cm}{0.3pt}\hfill Date:~\rule{5cm}{0.3pt}
 \input{nomenclature/nomenclature}
 
 \mainmatter
+\justify
 \input{introduction/introduction.tex}
 \input{background/background.tex}
 \input{project/project.tex}

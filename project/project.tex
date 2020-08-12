@@ -302,6 +302,9 @@ Recommending the best algorithm falls into 3 different possibilities based on th
 \subsection{Pre-Processing and Model Building}
 \label{model-building}
 
+The data-frame which is the sent to the KNN Algorithm consists of the following features: meta-features and target type as input and the output is the dataset hash. The meta-features consists of a maximum of 29 features, if the feature doesn't exist of the dataset, the missing value is imputed with -1. The other pre-processing done are as follows the meta-feature values are scaled between 0 and 1, the feature "Target Type" is one hot encoded and the output variable "Dataset Hash" is label encoded. Since we are only trying to find the closest dataset the repeated datasets removed based on the dataset hash, thus retaining the variations of the same dataset. The pre-processed dataset is send to model for training and later used for prediction of the dataset. Based on the predicted dataset, FMLearn suggests the best performing algorithm to the user.
+
+The model training and re-training is an automated process in FMLearn. The model is retained when a trigger from the database is sent to the application. This trigger is set off, after every 10 new records that are added to the database (this number is configurable though the \texttt{config file}). This enables FMLearn to keep improving it's model and it's predictions as and when new data is published to it, thus improving the recommendations.
 
 \section{The Big Picture}
 
