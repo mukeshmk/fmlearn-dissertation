@@ -308,14 +308,22 @@ The model training and re-training is an automated process in FMLearn. The model
 
 \section{The Big Picture}
 
+The Figure \ref{sequence-diagram} represents the Sequence Diagram of the application, explaining the object interactions in a time sequences. The sequence diagram of FMLearn represents 2 major use cases. Each use case represents the flow of object interactions in the case of where the user wants to:
+\begin{itemize}
+    \item publish data to FMLearn
+    \item get a recommendation from FMLearn for a given dataset.
+\end{itemize}
 
+Though the working of each individual modules/objects have been discussed in previous sections of this report, this section focuses explicitly on giving a in-depth understanding of how all the individual modules work together to form FMLearn.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[width=15cm]{images/Sequence Diagram.jpeg}
     \caption{Sequence Diagram}
     \label{sequence-diagram}
 \end{figure}
+
+
 
 
 \section{Security and Privacy Concerns}
