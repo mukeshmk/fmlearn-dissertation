@@ -4,12 +4,9 @@ This chapter provides details regarding the FMLearn application, implementation 
 
 The design and implementation choices led to the development of a working prototype of the concept Federated Meta-Learning and the application FMLearn. The server was developed in python and is used to portray the capabilities of the application. The concept of Federated Meta-Learning discussed in \ref{federated-meta-learning} and the changes in the workflow of a typical Machine Learning project caused due to the introduction of Federated Meta-Learning is discussed in section \ref{fml-workflow}. Then we discuss in detail the prototype FMLearn which was built to demonstrate this concept under section \ref{fmlearn}, while discussing it's architecture design in section \ref{architecture} along with some design decisions in section \ref{design-decisioins} and why these were taken. We will also be discussing in detail about the Model built by FMLearn to predict / recommend the potentially best algorithm(s) for a given task along with it's workflow. In section \ref{scikit-learn} we will be discussing in detail about the modifications made to scikit-learn so that it can act as a client to FMLearn along with discussing the data description used.
 
-% \section{Requirements}
-
-% \section{High-Level Overview}
-
 \section{Federated Meta-Learning}
 \label{federated-meta-learning}
+
 Federated Meta-Learning focuses on learning algorithm performance measures for arbitrary tasks. Essentially federated meta learning is an ecosystem where the raw data is kept on the original devices and the meta data and performance metrics of the algorithm on the tasks would be stored on a central FML server. Using this historic performance data, predict the best performing algorithm along with its hyper-parameters for a previously seen or unseen task.
 
 The input to Federated Meta-Learning is a description of the task, and the output is a recommendation for the potentially best performing algorithm(s) to solve that task. This recommendation could consist simply of a list of the best algorithms, or their predicted performance values. The list could also consist of multiple sub-lists created with different meta-learners.
@@ -36,13 +33,16 @@ The major difference with the workflows described in Figure \ref{automl-workflow
 
 \section{FMLearn}
 \label{fmlearn}
+
 FMLearn is an application which is a simple proof of concept of Federated Meta-Learning. FMLearn allows everyone to benefit from the data that is generated through machine learning and data science libraries. FMLearn is built using the Distributed Application Architecture (DAA), following the Client-Server Model. This allows the users to access as well as to exchange information and services with others. Though a Peer-To-Peer Model would be possible, this design was avoided due to the limitation in time as well as favouring the ease of development using the client-server model.
 
 FMLearn consists of a client which is in our case a modified version of the popular Machine Learning library Scikit-Learn, but it could be any machine learning library and the Server is a Python Flask Application which handles all API calls and Data Store requests made by the user. FMLearn also acts as a knowledge base, storing all the algorithms-data performance measure collected though the machine learning library. The server also provides publicly available API's which can be accessed by any Machine Learning or Data Science tool to use FMLearn irrespective of the programming language used to build them to get a recommendation for the potentially best performing algorithm(s) and it’s hyper-parameters to solve it’s task without being constrained by the need to use the client that is supported by this paper (modified scikit-learn).
 
 \subsection{Design Decisions}
 \label{design-decisioins}
+
 A few important Design Decisions that need to be addressed before proceeding with further discussions are as follows:
+
 \begin{itemize}
     \item Why Client-Server Model?
     
@@ -86,7 +86,11 @@ From the Figure \ref{architecture-diagram} we can see that the entire applicatio
     \label{architecture-diagram}
 \end{figure}
 
+\subsection*{FMLearn Client}
+
 The client majorly performs 2 tasks, publishing the data to the server and displaying the results obtained for algorithm recommendation from the server to the user. Irrespective of the task, the \texttt{fmlearn} module obtains the dataset from the user and it is converted to it's Meta-Features with the help of Auto-Sklearn. Depending on the task the user might want a recommendation of the best performing algorithm or might want to contribute his findings to the betterment of the FMLearn in general. Depending on the use case either an API call is made to obtain the recommendation for the user or the model details along with the performance metrics is obtained from the user and the model directly and then an API call is made to publish these details to the server respectively.
+
+\subsection*{FMLearn Server}
 
 The server performs various roles depending on the task and is explained in Section \ref{fmlearn-server} in detail. The server primarily acts a recommender system, recommending algorithm(s) for a given task. The server also acts a knowledge base or directory of algorithm-dataset performance measures, apart from this is also provides API's to expand or build this knowledge base. This knowledge base is stored in a PostgreSQL Database and it also used to build a Machine Learning model, The model was built using the K-Nearest Neighbors algorithm. The details about the model and algorithm in general will be discussed in the Section \ref{knn-model}. This model is used to make recommendations to the users for previously seen or unseen task or dataset. The model's ability to recommend the best performing algorithm(s) have been exposed to the public via API's.
 
@@ -104,6 +108,8 @@ The complete code repository is available at: \href{https://github.com/mukeshmk/
 
 After downloading the stable release and installing the library by following the instructions specified in the \texttt{README.md} file, we can use it normally as we use scikit-learn, since it's a fork of the original release it has all the features of the stable release plus it has the features of FMLearn.
 
+\subsection*{Initialisation of FMLearn}
+
 To initialise \texttt{fmlearn}'s client we have to import the \texttt{FMLClient} package from \texttt{sklearn.fmlearn} and then create an object of the class \texttt{FMLClient} as follows:
 \begin{lstlisting}
     # imports the FMLearn client into the program
@@ -111,6 +117,8 @@ To initialise \texttt{fmlearn}'s client we have to import the \texttt{FMLClient}
     # initialises the client
     fmlearn = FMLClient()
 \end{lstlisting}
+
+\subsection*{Obtaining the Meta-Features}
 
 Once the client as been initialised irrespective of the task the first thing to do would be do tell \texttt{FMLearn} what dataset we will be using for the task this can be done as follows:
 
@@ -126,11 +134,16 @@ Once the client as been initialised irrespective of the task the first thing to 
 
 Setting the dataset using the \texttt{sets\_dataset()} method triggers a background call to an external 3rd party library called Auto-Sklearn which is used to describe the Dataset and obtain the Meta-Features for that dataset. This is further explained in Section \ref{auto-sklearn}. These Meta-Features thus collected is then sent to the server to be processed as required.
 
-Depending on the objective of the user, the user can proceed with the program in one of these two ways:
+\subsection*{Available Methods}
+
+Depending on the objective of the user, the user can proceed with his program in one of these two ways:
 \begin{enumerate}
     \item Get recommendation for a task.
     \item Publish performance data for a task.
 \end{enumerate}
+
+\subsection*{Recommendation for a Task}
+
 If the user wants to get a recommendation for a task all they would have to do this to calls the methods \texttt{predict\_metric()} as follows.
 
 \begin{lstlisting}
@@ -148,6 +161,8 @@ This method provided by the client internally makes an API call to the server se
     \caption{Sample Output}
     \label{sample-output}
 \end{figure}
+
+\subsection*{Publish Metrics for a Task}
 
 If the user wants to publish a performance metric for a task which they performed, the user can do so by using the \texttt{publish()} method by passing the model used, scoring metric and the score as it's parameters as follows:
 
@@ -181,6 +196,8 @@ The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is
     fmlearn.set_dataset(x_train, y_train, x_test, y_test)
 \end{lstlisting}
 
+\subsection*{Design Decision}
+
 Before finalising with \texttt{auto-sklearn} another library by Hadi called \texttt{dataset2vec} \citep{dataset2vec} was explored and evaluated for it's effectiveness in model building. This library represents a tabular dataset in a hierarchical fashion by defining a dataset as a set of features, where each feature is a set of instance values. Working with this library proved to be quite challenging due to the lack of documentation and lack of pre-trained model which converts the dataset to it's meta-features and thus making it necessary for the user to train a model. Though this paper claimed to out-perform the current state-of-the-art, a design decision was made to not use \texttt{dataset2vec} and instead proceed with \texttt{auto-sklearn} as a model was available and also a support by the community to improve the meta-feature extraction model.
 
 \section{The Server: FMLearn}
@@ -200,7 +217,11 @@ The complete code repository is availabe at: \href{https://github.com/mukeshmk/f
 {\texttt{https://fmlearn.herokuapp.com/}}.
 \end{center}
 
+\subsection*{API's Provided}
+
 The server provides several API's among which two of the important API's are the \texttt{publish} and \texttt{predict} API's. These API's represent the two important functionalities of the proposed prototype. 
+
+\subsection*{Publish API}
 
 The \texttt{publish} API solves the problem with the workflow of machine learning and data science libraries. These libraries usually work in isolation and the information regarding how an algorithm performs on a particular dataset is neither publisher nor shared. The publish API can be called from within these libraries as done in the modified scikit-learn presented and thus enabling the users to share the algorithm performance data. The API is a \texttt{POST} method which can be accessed via this endpoint \texttt{/metric} and takes a JSON object as input in this format:
 
@@ -229,6 +250,8 @@ The \texttt{publish} API solves the problem with the workflow of machine learnin
 # but for illustration purpose only 1 item has been shown.
 \end{lstlisting}
 
+\subsection*{The Underlying Database}
+
 This data is validated, preprocessed and stored in the database. A PostgreSQL database used in this application which contains 3 tables to store the information received from the client. These tables are structured as follows as shown in Figure \ref{class-diagram}. The three tables are \texttt{Metric}, \texttt{Meta Feature} and \texttt{Params}, the \texttt{Metric} table has a one to many relation ship with both the \texttt{Meta Feature} and \texttt{Params} tables and this relationship puts the database in it's 3rd Normal Form.
 
 \begin{figure}[t]
@@ -239,6 +262,8 @@ This data is validated, preprocessed and stored in the database. A PostgreSQL da
 \end{figure}
 
 This database thus created acts as a knowledge base which contains information about the algorithm-data performance metrics. FMLearn also provides others API's to access this data which enables sharing of performance details of various algorithms among software libraries. The response of this API when there are no internal errors is a JSON object similar to the request object with a HTTP status code of 200.
+
+\subsection*{Predict API}
 
 The \texttt{predict} API solves the problem with the repetitive nature of the workflow of machine learning libraries, where the algorithm selection and hyper-parameter optimization tasks have to been done repeatedly. The \texttt{predict} API can be called by the machine learning libraries as done in the modified scikit-learn presented in this paper and thus breaking the cycle and saving time, electricity, computation power and money. The API is a \texttt{GET} method which can be accessed via this endpoint \texttt{/metric/predict} and the API accepts a JSON object as input which is similar to the below format:
 
@@ -289,6 +314,8 @@ The goal is to use FMLearn to try and find the closest existing dataset which is
 
 The algorithm used to make prediction or recommendation of the best performing algorithm for a given task is the \textbf{K-Nearest Neighbours (KNN)} algorithm. KNN is a supervised, non parametric learning algorithm, meaning, the target variable is known and that it does not make an assumption about the underlying data distribution pattern. In the case of FMLearn, a KNN classification algorithm has been used with k=1 and the distance between points is calculated using Euclidean distance. The "K" in KNN is the number of nearest neighbors to which the given input point must be the closest to before labeling the input point. In terms of FMLearn, "K" represents the number of datasets that the input dataset has to be closest to. Since we want to find one dataset to which the input dataset is closest to we are setting the value of "k=1". 
 
+\subsection*{Algorithm Recommendations}
+
 Recommending the best algorithm falls into 3 different possibilities based on the closes of the input dataset, which can be categorised as follows:
 \begin{itemize}
     \item Previously known dataset.
@@ -323,24 +350,28 @@ Though the working of each individual modules/objects have been discussed in pre
     \label{sequence-diagram}
 \end{figure}
 
+\subsection*{Use Case 1: Publish Metric}
+
 The use case 1 describes the scenario where the user wishes to publish their algorithm-data metrics to the FMLearn application. The first step of this process is to let FMLearn know about the underlying dataset by using the method \texttt{set\_dataset()}. As explained in section \ref{auto-sklearn}, is makes an internal call to \texttt{Auto Sklearn} to find the meta-data / meta-features about the dataset. These meta-features are stored in the FMLearn client object created and are later used when publishing. Then the user performs his preprocessing tasks, finds the best algorithm along with it's hyper-parameters and uses the model so thus created to evaluate the results using the \texttt{model.fit()} and \texttt{model.predict()} methods for the created model objects the results. This model, along with it's results is sent to FMLearn's client via the \texttt{publish()} method, where model details like the algorithm used and hyper-parameters are extracted and a request object is created with them along with the meta-features obtained from auto-sklearn and the algorithm metrics. This request object is a JSON object which is used to make an API post call to the FMLearn server. Once the server receives the request object it's pre-processed and checked for the data integrity and then pushed into the database and a \texttt{200 OK} response is sent to the client.
+
+\subsection*{Use Case 2: Predict Metric(s)}
 
 The second use case characterises the scenario where the user wishes to get a recommendation from the FMLearn application for the best performing algorithm for his dataset. The first step here as well is to let FMLearn know about the underlying dataset by using the method \texttt{set\_dataset()}, this obtains the meta-features of the dataset and stores them in the client object. The next step is to make a call to the client to get the recommendation using the \texttt{predict()} method. This creates a JSON request object which contains the meta-features which is sent across by the client to the FMLearn server via an API call as discussed in section \ref{fmlearn-server}. Upon being received by the server, the request object is pre-processed and checked for data integrity. The pre-processed data is sent to the model built using KNN algorithm (discussed in section \ref{knn-model}) to make predictions about the closest dataset available, upon finding the closest dataset, the best performing algorithm for the predicted dataset along with it's hyper-parameters are retrieved from the database and an response JSON object is created and sent to the client. The client then recommends the received algorithm to the user, which the user then further re-optimises if required and then proceed with his task.
 
 
 \section{Security and Privacy Concerns}
-FMLearn is a client-server architecture-based [2] application which provides public API’s for it's users, and it brings its own security and privacy concerns. The different aspects of security and privacy issues that are to be considered with respect to FMLearn are - but not limited to:
+FMLearn is a client-server architecture-based \citep{clientserver} application which provides public API’s for it's users, and it brings its own security and privacy concerns. The different aspects of security and privacy issues that are to be considered with respect to FMLearn are - but not limited to:
 
 \begin{enumerate}
     \item A client-server architecture.
-    \item Publicly available API server [3] (which could be broken down)
+    \item Publicly available API server \citep{input-validation} (which could be broken down)
 \end{enumerate}
 
 \subsection{Security Concerns}
 
 FMLearn was built using Python Flask, and uses PostgreSQL, which acts as the public API server which exposes various API to users to use the application and is currently hosted on Heroku .
 
-One of the most important security concerns with the current implementation of FMLearn is that the users have unlimited access to APIs (Flash Crowd Problem) [4], this could have severe consequences. A denial of service is possible, and extraction of all information of few of the major effects. This could be resolved using various rate-limiting strategies:
+One of the most important security concerns with the current implementation of FMLearn is that the users have unlimited access to APIs (Flash Crowd Problem) \citep{flash-crowd}, this could have severe consequences. A denial of service is possible, and extraction of all information of few of the major effects. This could be resolved using various rate-limiting strategies:
 
 \begin{itemize} 
     \item Limiting per connection property (IP address)
@@ -358,7 +389,7 @@ Once these rate-limiting features have been introduced if someone tried to repea
 
 Rate limiting prevents malicious code from abusing legitimate / illegitimate access to the API.
 
-One of the basic and yet most powerful technique which helps prevent a lot of security issues is Input validation [5]. Input validation should act as the first line of defense in case of a malicious attack. It is also useful to reject malicious data which helps prevent DoS attacks by rejecting unreasonably large inputs and against injection attacks by rejecting crafted payloads. Some of the possible Input validation techniques which could be easily enforced in my case are:
+One of the basic and yet most powerful technique which helps prevent a lot of security issues is Input validation \citep{web-application-sec}. Input validation should act as the first line of defense in case of a malicious attack. It is also useful to reject malicious data which helps prevent DoS attacks by rejecting unreasonably large inputs and against injection attacks by rejecting crafted payloads. Some of the possible Input validation techniques which could be easily enforced in my case are:
 
 \begin{itemize}
     \item Enforcing sensible length limits on inputs.\\
@@ -369,10 +400,10 @@ One of the basic and yet most powerful technique which helps prevent a lot of se
     (i.e., Numbers should be numbers, and SQL code as input results in an error)
 \end{itemize}
 
-Even though input validation is a decent first line of defense, it will fail if used as the only line of defense because when the application evolves and brings in complex input types it will not prevent attacks as it will be complex to determine the validity of complex data at input time. Moreover, complex validation procedures usually suffer from bypass attacks, and making validations might break functionality. [6]
+Even though input validation is a decent first line of defense, it will fail if used as the only line of defense because when the application evolves and brings in complex input types it will not prevent attacks as it will be complex to determine the validity of complex data at input time. Moreover, complex validation procedures usually suffer from bypass attacks, and making validations might break functionality. \citep{philippe_2020}
 
 \subsection{Data Protection}
-Another possible issues specific to FMLearn is the storage of hash for the complete dataset in the proposed prototype, the dataset is hashed using sha256 though this is very secure it has its own set of vulnerabilities [7] that need to be taken into consideration, for now we can assume that sha256 is safe to use. But if it is broken there is a possibility that all the user data can become compromised. Even if the hash of the dataset is not broken, but if the meta-data about the model (like the model parameters) and dataset is available to the hacker, it is very much possible that a model could be reconstructed and the data of the user can be compromised.
+Another possible issues specific to FMLearn is the storage of hash for the complete dataset in the proposed prototype, the dataset is hashed using sha256 though this is very secure it has its own set of vulnerabilities \citep{sha256} that need to be taken into consideration, for now we can assume that sha256 is safe to use. But if it is broken there is a possibility that all the user data can become compromised. Even if the hash of the dataset is not broken, but if the meta-data about the model (like the model parameters) and dataset is available to the hacker, it is very much possible that a model could be reconstructed and the data of the user can be compromised.
 
 Currently FMLearn is also vulnerable to Eavesdropping Attack, this is because the data sent from scikit-learn to FMLearn is not encrypted and is in plain-text, so various sniffing tools like Wireshark, Nmap, etc., can be used to monitor the network traffic and sniff the data transmitted between client and the server. To prevent such attacks, I can use a technique similar to twitter’s developer API access, where in the user is required to create an account with FMLearn and is required to use certain keys generated during account creation:
 
@@ -383,7 +414,7 @@ Currently FMLearn is also vulnerable to Eavesdropping Attack, this is because th
 \texttt{API\_SECRET\_KEY = ''}
 \end{center}
 
-This introduces a 3-legged oauth authentication workflow similar to twitter’s developer API [8] access and these tokens can them be used to securely transfer data back and forth between the client and server, without worrying about eavesdropping attack. But then by introducing this we bring in new security vulnerabilities into the application which needs to be addressed separately in a larger scale. But for now sticking to just encrypting the information related to dataset let it be dataset hash or meta-data about the data, can be done as the first step in the necessary direction for this dissertation to proceed using public key encryption techniques. Doing just this helps protect the privacy of the user’s data from potential sniffers and maintains the integrity of the data over the network.
+This introduces a 3-legged oauth authentication workflow similar to twitter’s developer API \citep{twitter-oauth} access and these tokens can them be used to securely transfer data back and forth between the client and server, without worrying about eavesdropping attack. But then by introducing this we bring in new security vulnerabilities into the application which needs to be addressed separately in a larger scale. But for now sticking to just encrypting the information related to dataset let it be dataset hash or meta-data about the data, can be done as the first step in the necessary direction for this dissertation to proceed using public key encryption techniques. Doing just this helps protect the privacy of the user’s data from potential sniffers and maintains the integrity of the data over the network.
 
 The scope of improvement in terms of security is huge in this project, it can be made secure enough for users to confidently use, but all this is just until things don’t go wrong.
 
