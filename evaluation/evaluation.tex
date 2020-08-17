@@ -1,3 +1,137 @@
 \chapter{Evaluation}
+
+In this section, the performance of FMLearn application is examined. The performance of the application is analysed based on the amount of time saved by the application when compared to the traditional methods of algorithm selection and hyper-parameter configuration. Apart from analysing the amount of time saved, this section will also provide information about the electricity and money saved while using the FMLearn application. This section also provides information about the model's accuracy while recommending the best algorithm(s) for a given task. Since Federated Meta-Learning and FMLearn are a Novel Concept and a Novel Application respectively there are no pre-defined standards used for to evaluate the accuracy for algorithm recommendation. Evaluation metrics like Mean Average Precision, Mean Average Recall, Intra-list Similarity, etc., used for recommender systems may not be able to accurately evaluate FMLearn. Moreover, there can be more than one best performing algorithm for the given dataset. So, here such evaluations are based on the comparisons from previous records obtained by performing algorithm selection and hyper-parameter optimisation for the same dataset under similar conditions.
+
+\textbf{NOTE:} all these evaluation and testing are performed on the hardware mentioned in the Appendix \ref{machine-details}.
+
 \section{Testing}
+
+To evaluate the performance of FMLearn application, FMLearn's client was setup on two computers. The first computer trained eight machine learning algorithms on 2 different types of dataset code for which can be found on GitHub:
+\begin{center}
+    \href{https://github.com/mukeshmk/toy-datasets}{https://github.com/mukeshmk/toy-datasets}
+\end{center}
+
+The datasets can be classified into a small and large dataset depending on the number of instances each dataset contains. Five small datasets having about 500 instances each and five large dataset having about 15,000 - 250,000 instances were used.
+
+\subsection*{Small Datasets}
+
+The small dataset used were: Breast Cancer \citep{brendan-et-al}, Diabetes \citep{bradley-et-al}, Wine \citep{lichman:m}, Boston \citep{harrison-et-al} and Iris \citep{fisher:r}. These datasets were available as part of \texttt{scikit-learn} library and can be imported as follows.
+
+\begin{lstlisting}
+# package in which the datasets are available at:
+from sklearn import datasets
+
+# importing the dataset into the program
+# example: boston dataset
+boston_ds = datasets.load_boston()
+
+# similarly for other mentioned datasets using the following methods
+# load_diabetes(), load_breast_cancer(), load_iris() and load_wine()
+
+\end{lstlisting}
+
+\subsection*{Large Datasets}
+
+The \textbf{UCI Machine Learning Repository} \citep{Dua:2019} was used to obtain the large datasets, namely Adult, MAGIC Gamma Telescope, Skin Segmentation \citep{skin-ds}, Statlog-Shuttle and Nursery \citep{Dua:2019} datasets, these datasets have about 15,000 - 250,000 instances and are available to the public as a CSV file. This data was loaded into the program as follows:
+
+\begin{lstlisting}
+# importing pandas - a data manipulation and analysis
+import pandas as pd
+
+# importing data
+dataset_df = pd.read_csv(path_to_data + "/file_name.csv", sep=',')
+
+\end{lstlisting}
+
+\subsection*{Algorithm Selection}
+
+The evaluation process required finding the best performing algorithm for a given dataset along with with hyper-parameters. To find the best performing algorithm the code segment available below was used, here various algorithms have been selected for evaluation and then added to a list called \texttt{models}. The algorithms in this list were used with there default hyper-parameter configuration to build a model and make predictions. The accuracy score of these models were recorded and then two to three best performing algorithms were chosen for hyper-parameter optimisation in the next step.
+% added this new line for formatting purpose
+\newline
+
+\begin{lstlisting}
+# assuming the required packages have been imported and 
+# data has been split into testing and training data.
+
+models = []
+models.append(('RFC', ensemble.RandomForestClassifier()))
+# similarly adding other algorithms for evaluation before 
+# selecting the best performing algorithm
+
+# finding the best algorithm
+names = []
+scores = []
+for name, model in models:
+    model.fit(x_train, y_train)
+    y_pred = model.predict(x_test)
+    score = accuracy_score(y_test, y_pred)
+    scores.append(score)
+    names.append(name)
+
+print(pd.DataFrame({'Name': names, 'Score': scores}))
+\end{lstlisting}
+
+The training used Grid-Search for hyper parameter optimization and cross-validation. The total execution time was between 13.67 minutes (Iris) and 94.24 minutes (Breast Cancer) for the small datasets (see Table: \ref{table:1}), and between 256.42 minutes (Nursery) and 869.74 minutes (Skin Segmentation) for the large dataset (see Table \ref{table:2}). FMLearn automatically submits all performance metrics and algorithm names along with the meta-features and hashes of the datasets to the FMLearn application via the API. 
+ 
+ On a second machine, we run the same experiments. But, before the training started, FMLearn's client requested the algorithm recommendations via the API. In the scenario that the client just used the returned best algorithm with its hyper parameters, no training was needed. Hence, for a small dataset, the user saves an average of 48.79 minutes and about 92.24 minutes (for Breast-Cancer Dataset) in a best case scenario. Whereas, for a large dataset the user saves an average of 533.21 minutes and about 869.74 minutes (for Skin Segmentation Dataset) in a best case scenario. This amounts to about 86.72\% and 95.762\% (for small and large datasets respectively) of time spent waiting by the user, when the machine learning algorithm performs hyper-parameter tuning and selects the best parameters for the model. In a scenario where the user would want to re-optimize hyper parameters, re-training was required for only the best algorithm suggested by FMLearn. Under these circumstances, time saved on an average by the user was about 40.864 minutes for small datasets and 513.15 minutes for large datasets.
+\newline
+ 
+\begin{table}[h!]
+\centering 
+\vspace*{+5pt}
+ \begin{tabular}{ |p{1in}||p{1in}|p{1in}|p{0.7in}|p{0.8in}|  }
+ \hline
+ \multicolumn{5}{|c|}{Execution Time (in minutes) for Small Datasets} \\
+ \hline
+ Datasets & Optimize All Algorithms & Re-Optimise best algorithm & FMLearn & Saving in \%\\
+ \hline
+ Breast-Cancer & 94.24 & 18.79 & 0.05 & 80 \\
+ \hline
+ Boston & 47.36 & 6.96 & 0.05 & 85.01 \\
+ \hline
+ Diabetes & 62.17 & 10.37 & 0.04 & 83.25 \\
+ \hline
+ Wine & 26.54 & 3.25 &  0.04 & 87.6 \\
+ \hline
+ Iris & 13.67 & 0.29 & 0.02 & 97.73 \\
+ \hline
+ \hline
+ \textbf{Average} & 48.796 & 7.932 & 0.04 & 86.718 \\
+ \hline
+\end{tabular}
+\vspace*{+5pt}
+\caption{Execution time when using GridSearch vs FMLearn for small datasets}
+\label{table:1}
+\end{table}
+\vspace*{-10pt}
+
+\begin{table}[h!]
+\centering 
+\vspace*{+5pt}
+ \begin{tabular}{ |p{1.8in}||p{1in}|p{1in}|p{0.7in}|p{0.8in}|  }
+ \hline
+ \multicolumn{5}{|c|}{Execution Time (in minutes) for Large Datasets} \\
+ \hline
+ Datasets & Optimize All Algorithms & Re-Optimise best algorithm & FMLearn & Saving in \%\\
+ \hline
+ Adult & 582.51 & 19.01 & 0.05 & 96.72 \\
+ \hline
+ MAGIC Gamma Telescope & 279.01 & 14.63 & 0.04 & 94.74 \\
+  \hline
+ Nursery & 256.42 & 15.47 &  0.04 & 93.95 \\
+ \hline
+ Skin Segmentation & 869.74 & 29.86 & 0.05 & 96.56 \\
+ \hline
+ Statlog-Shuttle & 678.37 & 21.35 & 0.04 & 96.84 \\
+ \hline
+ \hline
+ \textbf{Average} & 533.21 & 20.06 & 0.044 & 95.762 \\
+ \hline
+\end{tabular}
+\vspace*{+5pt}
+\caption{Execution time when using GridSearch vs FMLearn for large datasets}
+\label{table:2}
+\end{table}
+\vspace*{-10pt}
+
 \section{Results}
