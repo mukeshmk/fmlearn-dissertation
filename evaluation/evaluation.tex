@@ -169,15 +169,15 @@ Hence, for a small dataset, the user saves an average of 48.79 minutes and about
 \end{table}
 \vspace*{-10pt}
 
-Upon considering the average statistics obtained from these results and using them in calculating the average power consumption, we get for 
+Upon considering the statistics obtained from the above results and using them in calculating the power consumption, we can see that the average power consumed for find the best performing algorithm in the traditional methods for one of the small datasets is about 65.061W, but when using FMLearn the average power consumed is only about 10.629W which is about 86.718\% saving in the power used. In the case of large datasets, the average power consumed to find the best performing algorithm is about 710.946W, but when using FMLearn the average power consumed is only about 26.805W, which is about 95.762\% reduction in power used when compared to the traditional approach where FMLearn is not used.
 
 \subsection*{Algorithm Recommendations}
 
-Recommending the best algorithm falls into 3 different possibilities based on the closes of the input dataset, which can be categorised as follows:
+Recommending the best algorithm falls into 3 different categories based on the closeness of the input dataset as explained in Section \ref{knn-model}, which can be categorised as follows:
 \begin{itemize}
     \item Previously known dataset.
     \item Previously unknown dataset, which is similar to a known dataset.
     \item Previously unknown dataset, which is dissimilar to a known dataset.
 \end{itemize}
 
- In the case of a previously known dataset for which the best algorithm is also known, the distance between the points is 0 units, thus making the predictions 100\% accurate. Whereas, for previously unknown dataset which is highly similar to known dataset the prediction of algorithm is accurate but the hyper-parameters require re-optimisation to suite the new dataset. But, in the case of an unknown dataset which is highly dissimilar to a known dataset, the model is able to predict the type machine learning problem the dataset belongs to, but not the best algorithm for it, it instead recommends a set of algorithms which it thinks are the best in this case instead of recommending a single algorithm.
+The above discussed results for previously known datasets. In the case of unknown but similar datasets, a similar experiment was conducted but with where similar datasets were used. By similar datasets, I mean a large dataset like the Statlog-Shuttle dataset was taken and is broken down into small chunks of about 100k records, and these small subsets of data were used to get recommendations from FMLearn. In this case the prediction of algorithm is accurate but the hyper-parameters required re-optimisation to suite the new subset of the data. But, in the case of an previously unseen dataset which is highly dissimilar to the datasets known to FMLearn, the model is able to predict the type machine learning problem the dataset belongs to, i.e, if it's a classification, regression, clustering, etc, but not the best algorithm for it, it instead recommends a set of algorithms which it thinks are the best in this case instead of recommending a single algorithm. This set of algorithms are based on the closeness the previously known datasets.
