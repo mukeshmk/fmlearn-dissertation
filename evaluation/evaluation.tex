@@ -43,11 +43,13 @@ dataset_df = pd.read_csv(path_to_data + "/file_name.csv", sep=',')
 
 \end{lstlisting}
 
+\section*{First Machine}
+
+On the First Machine, the task of algorithm selection and configuration was performed, to publish the performance metrics of the best performing algorithm-data pairs on to FMLearn. This was done so that the model can be re-trained with the published data.
+
 \subsection*{Algorithm Selection}
 
 The evaluation process required finding the best performing algorithm for a given dataset along with with hyper-parameters. To find the best performing algorithm the code segment available below was used, here various algorithms have been selected for evaluation and then added to a list called \texttt{models}. The algorithms in this list were used with there default hyper-parameter configuration to build a model and make predictions. The accuracy score of these models were recorded and then two to three best performing algorithms were chosen for hyper-parameter optimisation in the next step.
-% added this new line for formatting purpose
-\newline
 
 \begin{lstlisting}
 # assuming the required packages have been imported and 
@@ -71,32 +73,65 @@ for name, model in models:
 print(pd.DataFrame({'Name': names, 'Score': scores}))
 \end{lstlisting}
 
-The training used Grid-Search for hyper parameter optimization and cross-validation. The total execution time was between 13.67 minutes (Iris) and 94.24 minutes (Breast Cancer) for the small datasets (see Table: \ref{table:1}), and between 256.42 minutes (Nursery) and 869.74 minutes (Skin Segmentation) for the large dataset (see Table \ref{table:2}). FMLearn automatically submits all performance metrics and algorithm names along with the meta-features and hashes of the datasets to the FMLearn application via the API. 
+\subsection*{Hyper-Parameter Optimisation}
+
+Grid-Search technique was used for hyper parameter optimization and cross-validation. For the best performing algorithm a parameter grid was constructed where the different hyper-parameter values were set and this grid was sent to the \texttt{GridSearchCV} method along with the cross-validation datasets and a few other configurations. 
+
+\begin{lstlisting}
+# cross validation specifications
+strat_k_fold = StratifiedKFold(n_splits=5, random_state=10)
+
+# an example of the parameter grid for LogisticRegression
+c_values = list(np.arange(1, 10))
+param_grid = [
+{'C': c_values, 'penalty': ['l1', 'l2'], 'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'], 'multi_class' : ['ovr']}
+]
+
+# GridSearchCV for LogisticRegression
+grid = GridSearchCV(linear_model.LogisticRegression(max_iter=10000), param_grid, cv=strat_k_fold, scoring='accuracy', iid=False)
+
+grid.fit(X, Y)
+
+# prints the best hyper-parameter configuration
+print(grid.best_params_)
+# prints the best scores
+print(grid.best_estimator_)
+\end{lstlisting}
+
+This process resulted in the optimal hyper-parameters for the algorithm-dataset pair and this information was then published to FMLearn via the client.
  
- On a second machine, we run the same experiments. But, before the training started, FMLearn's client requested the algorithm recommendations via the API. In the scenario that the client just used the returned best algorithm with its hyper parameters, no training was needed. Hence, for a small dataset, the user saves an average of 48.79 minutes and about 92.24 minutes (for Breast-Cancer Dataset) in a best case scenario. Whereas, for a large dataset the user saves an average of 533.21 minutes and about 869.74 minutes (for Skin Segmentation Dataset) in a best case scenario. This amounts to about 86.72\% and 95.762\% (for small and large datasets respectively) of time spent waiting by the user, when the machine learning algorithm performs hyper-parameter tuning and selects the best parameters for the model. In a scenario where the user would want to re-optimize hyper parameters, re-training was required for only the best algorithm suggested by FMLearn. Under these circumstances, time saved on an average by the user was about 40.864 minutes for small datasets and 513.15 minutes for large datasets.
-\newline
- 
+\section*{Second Machine}
+
+On a second machine, the same experiments were run. But, before the training started, an API call to FMLearn was made, where a prediction / recommendation request was made for the best performing algorithm for the given dataset. In this scenario the client just used the returned recommendation for the best algorithm with its hyper parameters, no training was needed. The model was created with the recommended results and then was re-optimised and the user can proceed with this task of making predictions.
+
+\section{Results}
+
+The total execution time was between 13.67 minutes (Iris) and 94.24 minutes (Breast Cancer) for the small datasets (see Table: \ref{table:1}), and between 256.42 minutes (Nursery) and 869.74 minutes (Skin Segmentation) for the large dataset (see Table \ref{table:2}). FMLearn automatically submits all performance metrics and algorithm names along with the meta-features and hashes of the datasets to the FMLearn application via the API. 
+
+Hence, for a small dataset, the user saves an average of 48.79 minutes and about 92.24 minutes (for Breast-Cancer Dataset) in a best case scenario. Whereas, for a large dataset the user saves an average of 533.21 minutes and about 869.74 minutes (for Skin Segmentation Dataset) in a best case scenario. This amounts to about 86.72\% and 95.762\% (for small and large datasets respectively) of time spent waiting by the user, when the machine learning algorithm performs hyper-parameter tuning and selects the best parameters for the model. In a scenario where the user would want to re-optimize hyper parameters, re-training was required for only the best algorithm suggested by FMLearn. Under these circumstances, time saved on an average by the user was about 40.864 minutes for small datasets and 513.15 minutes for large datasets.
+
+
 \begin{table}[h!]
 \centering 
 \vspace*{+5pt}
- \begin{tabular}{ |p{1in}||p{1in}|p{1in}|p{0.7in}|p{0.8in}|  }
+ \begin{tabular}{ |p{1in}||p{1in}|p{0.7in}|p{1in}|p{0.8in}|  }
  \hline
  \multicolumn{5}{|c|}{Execution Time (in minutes) for Small Datasets} \\
  \hline
- Datasets & Optimize All Algorithms & Re-Optimise best algorithm & FMLearn & Saving in \%\\
+ Datasets & Optimize All Algorithms & FMLearn & Re-Optimise best algorithm & Saving in \%\\
  \hline
- Breast-Cancer & 94.24 & 18.79 & 0.05 & 80 \\
+ Breast-Cancer & 94.24 & 0.05 & 18.79 & 80 \\
  \hline
- Boston & 47.36 & 6.96 & 0.05 & 85.01 \\
+ Boston & 47.36 & 0.05 & 6.96 & 85.01 \\
  \hline
- Diabetes & 62.17 & 10.37 & 0.04 & 83.25 \\
+ Diabetes & 62.17 & 0.04 & 10.37 & 83.25 \\
  \hline
- Wine & 26.54 & 3.25 &  0.04 & 87.6 \\
+ Wine & 26.54 & 0.04 & 3.25 & 87.6 \\
  \hline
- Iris & 13.67 & 0.29 & 0.02 & 97.73 \\
+ Iris & 13.67 & 0.02 & 0.29 & 97.73 \\
  \hline
  \hline
- \textbf{Average} & 48.796 & 7.932 & 0.04 & 86.718 \\
+ \textbf{Average} & 48.796 & 0.04  & 7.932 & 86.718 \\
  \hline
 \end{tabular}
 \vspace*{+5pt}
@@ -108,24 +143,24 @@ The training used Grid-Search for hyper parameter optimization and cross-validat
 \begin{table}[h!]
 \centering 
 \vspace*{+5pt}
- \begin{tabular}{ |p{1.8in}||p{1in}|p{1in}|p{0.7in}|p{0.8in}|  }
+ \begin{tabular}{ |p{1.8in}||p{1in}|p{0.7in}|p{1in}|p{0.8in}|  }
  \hline
  \multicolumn{5}{|c|}{Execution Time (in minutes) for Large Datasets} \\
  \hline
- Datasets & Optimize All Algorithms & Re-Optimise best algorithm & FMLearn & Saving in \%\\
+ Datasets & Optimize All Algorithms & FMLearn & Re-Optimise best algorithm & Saving in \%\\
  \hline
- Adult & 582.51 & 19.01 & 0.05 & 96.72 \\
+ Adult & 582.51 & 0.05 & 19.01 & 96.72 \\
  \hline
- MAGIC Gamma Telescope & 279.01 & 14.63 & 0.04 & 94.74 \\
+ MAGIC Gamma Telescope & 279.01 & 0.04 & 14.63 & 94.74 \\
   \hline
- Nursery & 256.42 & 15.47 &  0.04 & 93.95 \\
+ Nursery & 256.42 &  0.04 & 15.47 & 93.95 \\
  \hline
- Skin Segmentation & 869.74 & 29.86 & 0.05 & 96.56 \\
+ Skin Segmentation & 869.74 & 0.05 & 29.86 & 96.56 \\
  \hline
- Statlog-Shuttle & 678.37 & 21.35 & 0.04 & 96.84 \\
+ Statlog-Shuttle & 678.37 & 0.04 & 21.35 & 96.84 \\
  \hline
  \hline
- \textbf{Average} & 533.21 & 20.06 & 0.044 & 95.762 \\
+ \textbf{Average} & 533.21 & 0.044 & 20.06 & 95.762 \\
  \hline
 \end{tabular}
 \vspace*{+5pt}
@@ -134,4 +169,15 @@ The training used Grid-Search for hyper parameter optimization and cross-validat
 \end{table}
 \vspace*{-10pt}
 
-\section{Results}
+Upon considering the average statistics obtained from these results and using them in calculating the average power consumption, we get for 
+
+\subsection*{Algorithm Recommendations}
+
+Recommending the best algorithm falls into 3 different possibilities based on the closes of the input dataset, which can be categorised as follows:
+\begin{itemize}
+    \item Previously known dataset.
+    \item Previously unknown dataset, which is similar to a known dataset.
+    \item Previously unknown dataset, which is dissimilar to a known dataset.
+\end{itemize}
+
+ In the case of a previously known dataset for which the best algorithm is also known, the distance between the points is 0 units, thus making the predictions 100\% accurate. Whereas, for previously unknown dataset which is highly similar to known dataset the prediction of algorithm is accurate but the hyper-parameters require re-optimisation to suite the new dataset. But, in the case of an unknown dataset which is highly dissimilar to a known dataset, the model is able to predict the type machine learning problem the dataset belongs to, but not the best algorithm for it, it instead recommends a set of algorithms which it thinks are the best in this case instead of recommending a single algorithm.
