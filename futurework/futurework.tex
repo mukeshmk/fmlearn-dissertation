@@ -1,0 +1,11 @@
+\chapter{Limitations and Future Work?}
+
+FMLearn and Federated Meta-Learning opens up new avenues for research, the currently implementations of FMLearn being a prototype just scratches the surface when compared to it's full potential.
+
+\section*{Limitations}
+
+The current implementation of FMLearn is limited to tabular datasets and feature‐based supervised machine learning algorithms. The limitation with respect to the use of tabular datasets is due to the fact that obtaining meta-features which describe different types of data like image, audio, video, etc., accurately are not available and is an area of intense research \citep{image-meta-data} \citep{image-meta-data-2} and there are no widely used tools available and developing such a tool is out of scope of this research. The restriction to use a feature-based supervised machine learning algorithms is that they are relatively less complex and have less number of hyper-parameters when compared to complex structures and thousands of hyper-parameters a neural networks has, and implementing this was avoided due to the limitation in time.
+
+\section*{Future Work}
+
+The immediate future work concerning this project should be to move the client out of scikit-learn develop it as a stand alone library, this will enable wide spread use in the community which will result in the availability of vast variety of datasets. The increased availability will result in a better model thus improving the recommendations made my FMLearn. The more ambitious future work of this project could lead to research and implementation related to recommending complex neural networks or working with other forms of data source apart from tabular datasets.
