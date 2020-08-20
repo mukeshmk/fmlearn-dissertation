@@ -48,6 +48,15 @@ The tasks or datasets on which these algorithms run on are described by their me
 \fi
 
 \section{Related Work}
+The field of algorithm selection and configuration is an area of intense research, according to Wikipedia, as stated by Rice in \citep{rice197665}, the process of algorithm selection is defined as:
+\newline
+
+Given a portfolio ${\displaystyle{\mathcal{P}}}$ of algorithms ${\displaystyle{\mathcal{A}} \in {\mathcal{P}}}$, a set of instances ${\displaystyle{i \in {\mathcal{I}}}}$ and a cost metric \\ ${\displaystyle{m:{\mathcal{P}} \times {\mathcal{I}} \to \mathcal{R}}}$, the algorithm selection problem consists of finding a mapping ${\displaystyle s:{\mathcal {I}}\to {\mathcal {P}}}$ from instances ${\displaystyle {\mathcal {I}}}$ to algorithms ${\displaystyle {\mathcal {P}}}$ such that the cost ${\displaystyle \sum _{i\in {\mathcal {I}}}m(s(i),i)}$ across all instances is optimized.
+\newline
+
+Rice, went into great detail about explaining, about what he thought was the four major criteria in the selection process. The four primary criteria are as follows: Best Selection, Best Selection for a Subclass of Problems, Best Selection from a Subclass of Mappings and Best Selection from a Subclass of Mappings and Problems. He also proposed five major steps for analysis and solution of the algorithm selection process. These steps being: Formulation, Existence, Uniqueness, Characterization and Computation. He also explained in great detail about these criteria and steps using various example problem and formulating the best algorithm selection process for these criteria along with models. By doing this Rice in \citep{rice197665} proposed 15 questions that he suggested to be asked before an algorithm is chosen.
+
+In \citep{kerschke2018automated}, Kerschke talks about algorithm selection problem by given importance to \textit{per-instance algorithm selection problem} that is; given a computational problem, a set of algorithms for it, and a specific instance that needs to be solved, the problem is to determine which algorithm(s) can be expected to perform best on that instance. The authors also relates this type of problem to per-set algorithm selection, algorithm configuration, algorithm schedules and parallel algorithm portfolios and discusses about them in detail. By doing so in \citep{kerschke2018automated}, the authors also compare the results, discuss the problems faced and propose solutions for algorithm selection in discrete and continuous problems. They also provide an informative overview of problem specific feature set about which they discuss and provide a strong basis of why these characteristics are used in algorithm selection. They also shed some light on various other applications and there contributions based on there impact in this ever growing and evolving field of algorithm selection.
 
 %% a multi-line comment as an if statement
 \if false
