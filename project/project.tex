@@ -178,16 +178,19 @@ Upon calling the client's \texttt{publish} method the meta-features of the datas
 \subsection{Data Description: Auto-Sklearn}
 \label{auto-sklearn}
 
-Auto-sklearn \citep{feurer:m} is an open-source AutoML tool written in Python that automatically determines effective machine learning pipelines for classification and regression datasets. Though this is an AutoML tool, it was used here for it's \textbf{meta-learning} step in the AutoML pipeline, which it uses to warm start the Bayesian optimization procedure in it's core. This meta-learning step is abstracted inside all the features provided by the tool and is not easily available to the users to use outside the tool.
+As discussed in section \ref{meta-feat-realted-work}, Meta-Features describe the dataset, and there are various dedicated tools which provide the required features. One such tool is Auto-Sklearn \citep{feurer:m}. It is an open-source AutoML tool written in Python that automatically determines effective machine learning pipelines for classification and regression datasets. Though this is an AutoML tool, it was used here for it's \textbf{meta-learning} step in the AutoML pipeline, which it uses to warm start the Bayesian optimization procedure in it's core. This meta-learning step. i.e., obtaining meta-features is abstracted inside all the features provided by the tool and is not easily available to the users to use outside the tool.
 
-An utility package was introduced inside the FMLearn's client (modified Scikit-Learn) to make use of the meta-learning feature provided by auto-sklearn. This utility function performs the input checks, transforms the data and performs the required validations before passing on the dataframe to Auto-Sklearn's calculate meta-features method. It is available in this package via the imported method.
-
+Meta-features provided by Auto-Sklearn fit the following meta-features categories: General, Statistical and Information-Theoretic meta-features, though a few meta-features exists outside these categories, but majority of them fall into these. An utility package was introduced inside the FMLearn's client (modified Scikit-Learn) to make use of the functionality provided by auto-sklearn to obtain the meta-feature of a dataset. This utility function performs the input checks, transforms the data and performs the required validations before passing on the dataframe to Auto-Sklearn's calculate meta-features method. It is available in this package via the imported method.
+\newline
 \begin{lstlisting}
             from autosklearn.metalearning.metafeatures.metafeatures 
             import calculate_all_metafeatures_with_labels
 \end{lstlisting}
 
-The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is the dataset and the output is a set of meta-features. These meta-features are then converted into the required format and then forwarded to server via API calls. A few of the meta-features thus obtained are: \texttt{ClassEntropy, ClassProbabilityMean, NumberOfMissingValues, NumberOfCategoricalFeatures, NumberOfNumericFeatures, etc}. Depending on the dataset there can be about 24-30 meta-features obtained for a given dataset. For the complete list of meta-features and to see a few examples of values obtained via the Auto-Sklearn took please refer Appendix \ref{meta-features-ask}. The end user is abstracted away from existence of this feature, the call to auto-sklearn is handled internally by the client upon letting the client know about the dataset in use.
+
+The input to the \texttt{calculate\_all\_metafeatures\_with\_labels()} method is the dataset and the output is a set of meta-features. These meta-features are then converted into the required format and then forwarded to server via API calls. A few of the meta-features thus obtained are: \texttt{ClassEntropy, ClassProbabilityMean, NumberOfMissingValues, NumberOfCategoricalFeatures, NumberOfNumericFeatures, etc}. Depending on the dataset there can be about 24-30 meta-features obtained for a given dataset. Refer appendix \ref{meta-features-ask}, for the complete list of meta-features and to see a an example of values obtained via the Auto-Sklearn.
+
+The end user is abstracted away from existence of this feature, the call to auto-sklearn is handled internally by the client upon letting the client know about the dataset in use.
 
 \begin{lstlisting}
     # this is a method provided by the FMLearn client that internally calls
@@ -223,7 +226,7 @@ The server provides several API's among which two of the important API's are the
 
 \subsection*{Publish API}
 
-The \texttt{publish} API solves the problem with the workflow of machine learning and data science libraries. These libraries usually work in isolation and the information regarding how an algorithm performs on a particular dataset is neither publisher nor shared. The publish API can be called from within these libraries as done in the modified scikit-learn presented and thus enabling the users to share the algorithm performance data. The API is a \texttt{POST} method which can be accessed via this endpoint \texttt{/metric} and takes a JSON object as input in this format:
+The \texttt{publish} API solves the problem with the workflow of machine learning and data science libraries. These libraries usually work in isolation and the information regarding how an algorithm performs on a particular dataset is neither publisher nor shared. 
 
 \begin{lstlisting}
 # the input JSON object to publish API
@@ -250,11 +253,13 @@ The \texttt{publish} API solves the problem with the workflow of machine learnin
 # but for illustration purpose only 1 item has been shown.
 \end{lstlisting}
 
+The publish API can be called from within these libraries as done in the modified scikit-learn presented and thus enabling the users to share the algorithm performance data. The API is a \texttt{POST} method which can be accessed via this endpoint \texttt{/metric} and takes a JSON object as input in the format as described above.
+
 \subsection*{The Underlying Database}
 
 This data is validated, preprocessed and stored in the database. A PostgreSQL database used in this application which contains 3 tables to store the information received from the client. These tables are structured as follows as shown in Figure \ref{class-diagram}. The three tables are \texttt{Metric}, \texttt{Meta Feature} and \texttt{Params}, the \texttt{Metric} table has a one to many relation ship with both the \texttt{Meta Feature} and \texttt{Params} tables and this relationship puts the database in it's 3rd Normal Form.
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{images/Class Diagram.jpeg}
     \caption{Class Diagram}
@@ -385,10 +390,12 @@ One of the most important security concerns with the current implementation of F
 
 Once these rate-limiting features have been introduced if someone tried to repeatedly access the API, they would get the following error.
 
+\par\noindent\rule{\textwidth}{0.4pt}
 \begin{center}
 \texttt{HTTP/1.1 429 Too Many Requests}\\
 \texttt{Retry-After: 3600}
 \end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
 
 Rate limiting prevents malicious code from abusing legitimate / illegitimate access to the API.
 
@@ -410,17 +417,19 @@ Another possible issues specific to FMLearn is the storage of hash for the compl
 
 Currently FMLearn is also vulnerable to Eavesdropping Attack, this is because the data sent from scikit-learn to FMLearn is not encrypted and is in plain-text, so various sniffing tools like Wireshark, Nmap, etc., can be used to monitor the network traffic and sniff the data transmitted between client and the server. To prevent such attacks, I can use a technique similar to twitter’s developer API access, where in the user is required to create an account with FMLearn and is required to use certain keys generated during account creation:
 
+\par\noindent\rule{\textwidth}{0.4pt}
 \begin{center}
 \texttt{ACCESS\_TOKEN = ''\\}
 \texttt{ACCESS\_TOKEN\_SECRET = ''\\}
 \texttt{API\_KEY = ''\\}
 \texttt{API\_SECRET\_KEY = ''}
 \end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
 
 This introduces a 3-legged oauth authentication workflow similar to twitter’s developer API \citep{twitter-oauth} access and these tokens can them be used to securely transfer data back and forth between the client and server, without worrying about eavesdropping attack. But then by introducing this we bring in new security vulnerabilities into the application which needs to be addressed separately in a larger scale. But for now sticking to just encrypting the information related to dataset let it be dataset hash or meta-data about the data, can be done as the first step in the necessary direction for this dissertation to proceed using public key encryption techniques. Doing just this helps protect the privacy of the user’s data from potential sniffers and maintains the integrity of the data over the network.
 
 The scope of improvement in terms of security is huge in this project, it can be made secure enough for users to confidently use, but all this is just until things don’t go wrong.
 
 \subsection{Social Concerns}
-In the long run, social questions need consideration such as preventing manipulation (developers of algorithms may have an interest that their algorithms are "recommended") and free-rider problems (users benefiting from the system without sharing their data).
+In the long run, social questions need consideration such as preventing manipulation of the data, developers of algorithms may have an interest that their algorithms are "recommended" to other users. So, the developers might manipulate data so the underlying trained model is skewed to recommend their algorithm for any task. Doing this will result is both unfair advantage to the developers algorithm making it popular and also cause FMLearn to suggest wrong algorithms. Another social issues that must be addressed in the free-rider problem, where the users benefit from the system without sharing their data. 
 

@@ -82,10 +82,10 @@ The Meta-Features discussed above are just a small sample of various possible ch
 \subsection*{Algorithm Selection}
 
 The field of algorithm selection and configuration is an area of intense research, according to Wikipedia, as stated by Rice in \citep{rice197665}, the process of algorithm selection is defined as:
-\newline
 
+\par\noindent\rule{\textwidth}{0.4pt}\newline
 \textbf{Definition 1:} Given a portfolio ${\displaystyle{\mathcal{P}}}$ of algorithms ${\displaystyle{\mathcal{A}} \in {\mathcal{P}}}$, a set of instances ${\displaystyle{i \in {\mathcal{I}}}}$ and a cost metric ${\displaystyle{m:{\mathcal{P}} \times {\mathcal{I}} \to \mathcal{R}}}$, the algorithm selection problem consists of finding a mapping ${\displaystyle s:{\mathcal {I}}\to {\mathcal {P}}}$ from instances ${\displaystyle {\mathcal {I}}}$ to algorithms ${\displaystyle {\mathcal {P}}}$ such that the cost ${\displaystyle \sum _{i\in {\mathcal {I}}}m(s(i),i)}$ across all instances is optimized.
-\newline
+\par\noindent\rule{\textwidth}{0.4pt}
 
 Rice, went into great detail about explaining, about what he thought was the four major criteria in the selection process. The four primary criteria are as follows: Best Selection, Best Selection for a Subclass of Problems, Best Selection from a Subclass of Mappings and Best Selection from a Subclass of Mappings and Problems. He also proposed five major steps for analysis and solution of the algorithm selection process. These steps being: Formulation, Existence, Uniqueness, Characterization and Computation. He also explained in great detail about these criteria and steps using various example problem and formulating the best algorithm selection process for these criteria along with models. By doing this Rice in \citep{rice197665} proposed 15 questions that he suggested to be asked before an algorithm is chosen.
 
@@ -104,7 +104,25 @@ According to \citep{feurer:m} and \citep{kotthoff:l}, new methods for increasing
 In Auto-WEKA \citep{kotthoff:l}, the authors built on the Bayesian Optimisation approach. They used the Tree-structure Parzen Estimator (TPE) approach which a Sequential Model-Based Optimization (SMBO) algorithm, they also used Sequential model-based algorithm configuration (SMAC) models, which were used to create probabilistic models. These two types of models gave robust performance for algorithm selection and probabilistic estimators for hyper-parameters respectively, which were used to demonstrate the feasibility of an automatic approach to learning algorithm and hyper-parameter selection. The result of this research was a tool called Auto-WEKA, which has a list of 47 WEKA classification algorithms that were used as a single learning algorithm, which selects a single base classifier and a meta- or ensemble- classifiers. It was one of the first tools to perform a fully automated algorithm selection and hyper-parameter optimization for a large set of candidates.
 
 \subsection*{Meta-Features}
-As discussed in section \ref{meta-feat-realted-work}, 
+
+Rivolli in \citep{meta-features-3} surveys a comprehensive list of meta-features and how they are used in classification problems, they authors also analyse and organise the meta-features by highlighting there positive and negative attributes of each meta-feature. They also defined what a meta-feature is, and it is as follows:
+
+\par\noindent\rule{\textwidth}{0.4pt}\newline
+\textbf{Definition 2:} Let ${\displaystyle{D \in \mathcal{D} }}$ be a Dataset, ${\displaystyle{m: \mathcal{D} \to \mathcal{R}^{k'}}}$ be a characterisation measure, and $\displaystyle{\sigma: \mathcal{R}^{k'} \to \mathcal{R}^{k}}$ be a summarisation function. Both $\displaystyle{m}$ and $\sigma$ have also hyper-parameters associated, $h_m$ and $h_\sigma$ respectively. Thus, a meta-feature $\displaystyle{f: \mathcal{D} \to \mathcal{R}^{k}}$ for a given dataset $\displaystyle{\mathcal{D}}$ is given by:
+
+\begin{center}
+    $\displaystyle{f(\mathcal{D}) = \sigma(m(\mathcal{D}, h_m), h_\sigma)}$
+\end{center}
+
+The measure $\displaystyle{m}$ can extract more than one value from each data set, i.e., $\displaystyle{k'}$ can vary according to $\displaystyle{\mathcal{D}}$, which can be mapped to a vector of fixed length $\displaystyle{k}$ using a summarisation function $\displaystyle{\sigma}$.
+
+\par\noindent\rule{\textwidth}{0.4pt}
+
+The authors also present a tool called Meta-Feature Extractor, which can be used to measure the meta-features proposed and discussed in this paper and made the tool publicly available to the users as a package in Python and R.
+
+The authors in \citep{meta-features-1} and \citep{meta-features-2} introduce concepts about meta-features characterisation and selection algorithm respectively. Castiello in \citep{meta-features-1} analyses most commonly used meta-features and discusses there properties an inherent manner. He also introduces new features by transforming the existing features as a result of their analysis. The author(s) also suggest a set of measures that can be used to describe a dataset using the proposed meta-features. The suggested meta-features can be used as a bias for other base-learning in for their respective tasks. 
+
+Filchenkov in \citep{meta-features-2} creates an optimal meta-feature suggestion algorithm for different cases. The authors do this by creating a new approach for meta-feature engineering, which they also have proved to be useful for feature selection algorithm's recommendation. They also conduct an almost complete analysis of most of the popular meta-features and use the results so obtained to suggest optimal meta-features for different tasks. One of the major contributions by this paper is the analysis they have done in relation to classification algorithms. They have used various popular classification algorithms for which the author(s) engineered new meta-features and recommended existing meta-features for most of the popular algorithms and they categorised this specific type of measures as model-based meta-features.
 
 
 %% a multi-line comment as an if statement
