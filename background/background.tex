@@ -1,5 +1,19 @@
 \chapter{Background Details}
 
+This chapter provides insights about multiple areas related to Federated Meta-Learning. It takes a deeper look into the fundamental concepts related to this research and also discusses other related work and existing research in the fields of Meta-Learning, Algorithm Selection and Automated Machine Learning.
+
+\section{Meta-Learning}
+Meta-Learning in the context of Machine Learning is learning how to learn. It can also be attributed to the study of principal methods that use meta-knowledge to create efficient models by using machine learning techniques. Meta-Learning algorithm use experience to learn how to perform a certain task, these modified learner are better than the original learner as they have gained additional experience. Each algorithm works on a set of assumptions about the data, that it is \textbf{inductively biased}, meaning that the algorithm will learn well (or work as expected) given that the bias matches the learning problem at hand. This introduces restrictions about the type of data and the techniques used to collect this data to perform the meta-learning. By using different types of meta-data, like in this case meta-features of the dataset, it is possible to learn to effectively solve a learning problem. There are three approaches to meta-learning algorithm model-based, metrics-based and optimisation-based.
+
+\begin{itemize}
+    \item \textbf{Model-Based}:
+    This type of meta-learning models updates its model-parameters rapidly with training over a dataset.
+    \item \textbf{Metric-Based}:
+    The core idea in type of models is similar to that of nearest neighbours algorithms and a relationship between tasks are established.
+    \item \textbf{Optimization-Based}:
+    In this case the algorithms plays around with the optimisation algorithms which is used to train the model.
+\end{itemize}
+
 \section{Automated Machine Learning}
 Automated Machine Learning or AutoML, is the process of automating the time consuming task of Algorithm Selection and Optimizing the Hyper-Parameters. Traditional machine learning model creation is highly resource-intensive and requires significant domain knowledge and time to create and compare dozens of models. With AutoML, we will be able to accelerate the time it takes to get ML models with great ease and efficiency. There are many tools that offer to perform this complicated and time consuming task like Auto-Sklearn, Auto-Weka, Auto-Keras, etc. Apart from these tasks AutoML tools also perform feature selection, featuring engineering, data pre-processing and also analyse and tune the results. Among the various tasks performed by the AutoML Tools, the tasks that consume the most of the time are Algorithm Selection and Hpyer-Parameter Optimisation. 
 
@@ -47,6 +61,22 @@ The tasks or datasets on which these algorithms run on are described by their me
 
 \fi
 
+\section{Meta-Features}
+\label{meta-feat-realted-work}
+In the notion of Meta-Learning (MtL), Meta-Features are measures used to describe datasets and their relationship with algorithm bias. Meta-Features are used in Meta-Learning and AutoML tasks to describe the underlying dataset to create a machine learning, recommender systems and other models. The Meta-Features can be categorised to various groups, namely: General, Statistical, Information-theoretic, Model-based, landmarking, Relative Landmarking, Clustering, Complexity, etc. \citep{meta-features-1} \citep{meta-features-2} \citep{meta-features-3}. The most frequently adopted meta-features in three of the important categories used in this research are:
+\begin{itemize}
+    \item \textbf{General Meta-features}:
+    Number of observations, Number of attributes, Number of output values, Dataset dimensionality.
+    
+    \item \textbf{Statistical Meta-features}:
+    Standard deviation, Coeﬃcient of variation, Covariance, Linear correlation coeﬃcient, Skewness, Kurtosis
+    
+    \item \textbf{Information-Theoretic Meta-features}:
+    Normalized class entropy, Normalized attribute entropy, Joint entropy of class and attribute, Mutual information of class and attribute, Equivalent number of attributes, Noise-signal ratio.
+\end{itemize}
+
+The Meta-Features discussed above are just a small sample of various possible characterisation features \citep{meta-features-1} \citep{meta-features-2} \citep{meta-features-3} , this is not an exhaustive list and details about these features are out of scope of this research.
+
 \section{Related Work}
 
 \subsection*{Algorithm Selection}
@@ -72,6 +102,10 @@ Though the above mentioned researchers laid the foundation for algorithm selecti
 According to \citep{feurer:m} and \citep{kotthoff:l}, new methods for increasing efficiency and robustness of AutoML are the current trend and focus in this area of research. The authors proposed tools like Auto-Sklearn and Auto-WEKA respectively to solve the problem of algorithm selection by improving on the existing AutoML methods. In Auto-Sklearn \citep{feurer:m}, the authors made improvements to the AutoML approach by introducing Meta-learning, which they used to find good instantiations of machine learning algorithms, which is a complementary approach to that of Bayesian optimization techniques. In another approach the authors of Auto-Sklearn used automated ensemble construction, where they used the models created during the evaluation process, instead of discarding these models they used the models in a post-processing technique to create an ensemble which is evaluated during optimization and from there results they found that the ensemble almost always outperformed individual models. 
 
 In Auto-WEKA \citep{kotthoff:l}, the authors built on the Bayesian Optimisation approach. They used the Tree-structure Parzen Estimator (TPE) approach which a Sequential Model-Based Optimization (SMBO) algorithm, they also used Sequential model-based algorithm configuration (SMAC) models, which were used to create probabilistic models. These two types of models gave robust performance for algorithm selection and probabilistic estimators for hyper-parameters respectively, which were used to demonstrate the feasibility of an automatic approach to learning algorithm and hyper-parameter selection. The result of this research was a tool called Auto-WEKA, which has a list of 47 WEKA classification algorithms that were used as a single learning algorithm, which selects a single base classifier and a meta- or ensemble- classifiers. It was one of the first tools to perform a fully automated algorithm selection and hyper-parameter optimization for a large set of candidates.
+
+\subsection*{Meta-Features}
+As discussed in section \ref{meta-feat-realted-work}, 
+
 
 %% a multi-line comment as an if statement
 \if false
