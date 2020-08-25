@@ -16,7 +16,7 @@ In its simplest form, federated meta-learning would simply be a knowledge base o
 \section{Workflow of Federated Meta-Learning}
 \label{fml-workflow}
 
-From section \ref{workflow-automl}, we know that a typical algorithm selection and configuration task using the AutoML tools result in a repetitive and time consuming process which in turn eats up a lot of computing resources, electricity and money. To tackle this problem Dr. Joeran Beel proposed Federated Meta-Learning as seen in section \ref{federated-meta-learning}. When we take this concept and apply it to the current ecosystem of Machine Learning tasks we get a workflow as show in Figure \ref{fml-workflow-diagram}.
+From section \ref{workflow-automl}, we know that a typical algorithm selection and configuration task using the AutoML tools result in a repetitive and time consuming process which in turn eats up a lot of computing resources, electricity and money. To tackle this problem the concept of Federated Meta-Learning as seen in section \ref{federated-meta-learning} can be applied. When we take this concept and apply it to the current ecosystem of Machine Learning tasks we get a workflow as show in Figure \ref{fml-workflow-diagram}.
 
 \begin{figure}[t]
     \centering
@@ -54,7 +54,7 @@ A few important Design Decisions that need to be addressed before proceeding wit
     
     \item Why a Public API Server?
     
-    When Federated Meta-Learning was proposed by Dr. Joeran Beel \citep{fml}, he envisioned an ecosystem where everyone would benefit from the data that is generated though Machine Learning libraries and the prediction of the best performing algorithm along with it's hyper-parameters be available to all. A public API server ensures that even if the developers aren't using the supported client - modified scikit-learn - they can still benefit from the recommendations made by FMLearn.
+    The concept of Federated Meta-Learning \citep{fml}, was envisioned as an ecosystem where everyone would benefit from the data that is generated though Machine Learning libraries and the prediction of the best performing algorithm along with it's hyper-parameters be available to all. A public API server ensures that even if the developers aren't using the supported client - modified scikit-learn - they can still benefit from the recommendations made by FMLearn.
     
     \item Why not a stand-alone client?
     
