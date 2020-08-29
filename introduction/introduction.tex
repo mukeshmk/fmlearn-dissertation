@@ -25,14 +25,12 @@ Federated Meta Learning focuses on learning the algorithm performance measures f
 
 
 \section{Research Goal}
-The goal of this research is to facilitate the algorithm selection and configuration process. This can be done by making it faster with the use of historic performance data, produced on various devices and by various machine learning algorithms and libraries. This data can be used to improve the performance of algorithm selection. Thus saving time, electricity, computational power and money which is required in finding the best algorithm and its optimal hyper-parameters for the task.
+The goal of this research is to facilitate the algorithm selection and configuration process. This can be done by making it faster with the use of historic performance data, produced on various devices and by various machine learning algorithms and libraries. This data can be used to improve the performance of algorithm selection, thus saving time, electricity, computational power and money which will otherwise be required for finding the best algorithm and its optimal hyper-parameters for the task.
 
-To improve the algorithm selection and configuration process, a prototype of Federated Meta Learning named “FMLearn” is presented.
+To improve the algorithm selection and configuration process, a prototype of Federated Meta Learning named \textbf{FMLearn} is presented. The potential benefits of this research include the development of FMLearn a tool that applies the concepts of Federated Meta-Learning to suggest users with the best algorithm along with it's hyper-parameters for a previously seen or unseen tasks.
 
-The potential benefits of this research include the development of FMLearn a tool that applies the concepts of Federated Meta-Learning to suggest users with the best algorithm along with it's hyper-parameters for a previously seen or unseen tasks.
-
-\subsection{FMLearn}
-The goal is to develop an application, “FMLearn" as a simple proof of concept for Federated Meta-Learning and it should allow everyone to benefit from the data that is generated through machine learning and data science libraries. When put simply, the input to FMLearn is a dataset and the output is a recommendation for the potentially best performing algorithm(s) and it's hyper-parameters to solve that task.
+%% \subsection{FMLearn}
+The goal is to develop an application, \textbf{FMLearn} as a simple proof of concept for Federated Meta-Learning and it should allow everyone to benefit from the data that is generated through machine learning and data science libraries. When put simply, the input to FMLearn is a dataset and the output is a recommendation for the potentially best performing algorithm(s) and it's hyper-parameters to solve that task.
 
 %% multi-time comment using if block
 \if false
@@ -40,6 +38,19 @@ FMLearn consists of a server\footnote{\url{https://github.com/mukeshmk/fm-learn}
 \fi
 
 FMLearn also provides an additional benefit by also acting as a publicly available knowledge base or directory of algorithms-data performance measures with an ability to improve and/or add data to this knowledge base. With this it also provides an ability to use this knowledge via the API's provided by the FMLearn application for other similar tasks. Another important benefit is the ability for any Machine Learning or Data Science tool to use FMLearn irrespective of the programming language used to build them to get a recommendation for the potentially best performing algorithm(s) and it's hyper-parameters to solve it's task without being constrained by the need to use the client that is supported by this paper (modified scikit-learn).
+
+
+\section{Contributions}
+This research utilises the novel concept of Federated Meta-Learning in it's core, applies it's principle and proposes the first prototype of the application FMLearn. The application will ultimately facilitate the algorithm selection and configuration process in finding the best performing algorithm for a given task. Apart from this, the research also makes the following contributions to the community:
+
+\begin{itemize}
+    \item FMLearn also acts a knowledge base or directory of algorithms-data performance measures.
+    \item Provides a publicly available API server to facilitate access of the performance measures and also the algorithm selection and configuration process.
+    \item Provides a client implementation in python to access the API's provided by the server.
+    \item This research also acts a proof of concept for Federated Meta-Learning and how it helps in saving time and hence electricity, computational power and money for the user.
+\end{itemize}
+
+This research was also published at the \textit{7th ICML Workshop on Automated Machine Learning (AutoML)}, under the name \textit{Federated Meta-Learning: Democratizing Algorithm Selection Across Disciplines and Software Libraries}.
 
 %% multi-time comment using if block
 \if false
@@ -54,14 +65,7 @@ The various tasks that are to be performed in this research, which will ultimate
     \item Analyse how Federated Meta-Learning helps in saving time and hence electricity, computational power and money for the user by finding the best algorithm for the task.
 \end{itemize}
 
-%% \section{Contributions}
-
 \section{Research Scope}
 This research / project will solely focus on whether any benefits can be gained by using the concept of Federated Meta-Learning via the application FMLearn. This research / project will mainly focus on the performance improvements gain by using FMLearn and also the time, electricity, computational power and money saved by the developers / users who use this application to get a recommendation for the potentially best performing algorithm(s) and it's hyper-parameters to solve a given task. Potential security and privacy concerns will be shortly discussed to give future researchers a scope for research and improvement to be applied in this project. However, this will not be the primary concern of this paper.
-
-\section{Keywords}
-Search strategy keywords:
-
-\texttt{Federated Meta-Learning, AutoML, Automated Machine Learning, Machine Learning, RecSys, Recommender Systems, SciKit-Learn, Auto-Sklearn, Client-Server Architecture, Dataset Meta-Features, Meta-Features, Meta Data, Machine Learning Libraries, Algorithm Selection, Algorithm Configuration, Warm Start of Algorithms, FMLearn.}
 
 \fi
