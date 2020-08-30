@@ -1,6 +1,6 @@
 \chapter{Background Details}
 
-This chapter provides insights about multiple areas related to Federated Meta-Learning. It takes a deeper look into the fundamental concepts related to this research and also discusses other related work and existing research in the fields of Meta-Learning, Algorithm Selection and Automated Machine Learning.
+This chapter provides insights about multiple areas related to Federated Meta-Learning. It takes a deeper look into the fundamental concepts related to this research and also discusses other related work and existing research in the fields of Distributed (Machine) Learning, Federated Learning, Meta-Learning, Algorithm Selection and Automated Machine Learning. This chapter also provides an understanding of the current state of research in the areas of Algorithm Selection, AutoML and Meta-Feature abstraction.
 
 \section{Meta-Learning}
 Meta-Learning in the context of Machine Learning is learning how to learn. It can also be attributed to the study of principal methods that use meta-knowledge to create efficient models by using machine learning techniques. Meta-Learning algorithm use experience to learn how to perform a certain task, these modified learner are better than the original learner as they have gained additional experience. Each algorithm works on a set of assumptions about the data, that it is \textbf{inductively biased}, meaning that the algorithm will learn well (or work as expected) given that the bias matches the learning problem at hand. This introduces restrictions about the type of data and the techniques used to collect this data to perform the meta-learning. By using different types of meta-data, like in this case meta-features of the dataset, it is possible to learn to effectively solve a learning problem. There are three approaches to meta-learning algorithm model-based, metrics-based and optimisation-based.
@@ -79,6 +79,21 @@ The Meta-Features discussed above are just a small sample of various possible ch
 
 \section{Related Work}
 
+\subsection{Federated Meta-Learning}
+Chen in \citep{chen-et-al} has used the term \textbf{Federated Meta-Learning} once before, but in a completetly different context. But the terms, Distributed Machine Learning \citep{disml} and Federated Machine Learning \citep{fedml-google} are realted to Federated Meta-Learning, in the sense that they share a few underlying concepts but yet totally different.
+
+\subsection*{Distributed (Machine) Learning}
+Automatic Learning has become popular and important in the recent years due to exponential growth of data being collected and the need to analyse data to create machine learning models. Peteiro in his survey of methods for Distributed Machine Learning \citep{disml}, points out that these needs introduced a new type of challenge with respect to efficiency and scalability of machine learning algorithms related to computational and memory resources. To solve this challenge researchers proposed two approaches, one is the concept of distributed machine learning algorithm which posses various limitations and the other strategy is to combine the outputs of various algorithms in a fashion similar to ensembling. On doing so large datasets can be addressed using a distributed clustering environment where both the techniques are used in combination to attain best possible results.
+
+\subsection*{Federated Learning}
+Federated Machine Learning \citep{fedml-google} is a collaborative learning strategy where a machine learning algorithm is trained across multiple devices which hold the data without exchanging it, i.e, the users remain the owners of the data. This approach is different to traditional approach of having a centralised repositories of data similar to OpenML \citep{OpenML2013} and also the approach of distributed machine learning where the it is assumed that the data is identically distributed across devices. Federated Learning allows the end users to build a common, robust model across devices without sharing data thus addressing important issues regarding data security and privacy.
+
+\subsection*{Federated Learning vs Federated Meta-Learning}
+
+Federated Machine Learning enables devices to collaboratively learn a shared prediction model while keeping all the training data on device, decoupling the ability to do machine learning from the need to store the data in a centralised server. Whereas Federated Meta-Learning provides an ecosystem where the learning happens locally on the users machine based on the dataset's meta-data that the user provides. This meta-data is used to make a recommendation of an algorithm that is used to create a model. Here, both the learning and data is kept on the users machine.
+
+
+\subsection{Other Related Concepts and Research}
 \subsection*{Algorithm Selection}
 
 The field of algorithm selection and configuration is an area of intense research, according to Wikipedia, as stated by Rice in \citep{rice197665}, the process of algorithm selection is defined as:
@@ -113,7 +128,7 @@ Rivolli in \citep{meta-features-3} surveys a comprehensive list of meta-features
 \begin{center}
     $\displaystyle{f(\mathcal{D}) = \sigma(m(\mathcal{D}, h_m), h_\sigma)}$
 \end{center}
-
+\newpage
 The measure $\displaystyle{m}$ can extract more than one value from each data set, i.e., $\displaystyle{k'}$ can vary according to $\displaystyle{\mathcal{D}}$, which can be mapped to a vector of fixed length $\displaystyle{k}$ using a summarisation function $\displaystyle{\sigma}$.
 
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -123,13 +138,6 @@ The authors also present a tool called Meta-Feature Extractor, which can be used
 The authors in \citep{meta-features-1} and \citep{meta-features-2} introduce concepts about meta-features characterisation and selection algorithm respectively. Castiello in \citep{meta-features-1} analyses most commonly used meta-features and discusses there properties an inherent manner. He also introduces new features by transforming the existing features as a result of their analysis. The author(s) also suggest a set of measures that can be used to describe a dataset using the proposed meta-features. The suggested meta-features can be used as a bias for other base-learning in for their respective tasks. 
 
 Filchenkov in \citep{meta-features-2} creates an optimal meta-feature suggestion algorithm for different cases. The authors do this by creating a new approach for meta-feature engineering, which they also have proved to be useful for feature selection algorithm's recommendation. They also conduct an almost complete analysis of most of the popular meta-features and use the results so obtained to suggest optimal meta-features for different tasks. One of the major contributions by this paper is the analysis they have done in relation to classification algorithms. They have used various popular classification algorithms for which the author(s) engineered new meta-features and recommended existing meta-features for most of the popular algorithms and they categorised this specific type of measures as model-based meta-features.
-
-\subsection*{Distributed (Machine) Learning}
-
-\subsection*{Federated Learning}
-
-\subsection{Federated Learning vs Federated Meta-Learning}
-
 
 %% a multi-line comment as an if statement
 \if false
