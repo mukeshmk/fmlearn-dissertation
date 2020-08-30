@@ -110,7 +110,6 @@ The total execution time was between 13.67 minutes (Iris) and 94.24 minutes (Bre
 
 Hence, for a small dataset, the user saves an average of 48.79 minutes and about 92.24 minutes (for Breast-Cancer Dataset) in a best case scenario. Whereas, for a large dataset the user saves an average of 533.21 minutes and about 869.74 minutes (for Skin Segmentation Dataset) in a best case scenario. This amounts to about 86.72\% and 95.762\% (for small and large datasets respectively) of time spent waiting by the user, when the machine learning algorithm performs hyper-parameter tuning and selects the best parameters for the model. In a scenario where the user would want to re-optimize hyper parameters, re-training was required for only the best algorithm suggested by FMLearn. Under these circumstances, time saved on an average by the user was about 40.864 minutes for small datasets and 513.15 minutes for large datasets.
 
-
 \begin{table}[h!]
 \centering 
 \vspace*{+5pt}
@@ -140,6 +139,13 @@ Hence, for a small dataset, the user saves an average of 48.79 minutes and about
 \end{table}
 \vspace*{-10pt}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/Small Datasets.png}
+    \caption{Execution Time for Small Datasets as seen in Table \ref{table:1}}
+    \label{fig:small_dataset}
+\end{figure}
+
 \begin{table}[h!]
 \centering 
 \vspace*{+5pt}
@@ -168,6 +174,13 @@ Hence, for a small dataset, the user saves an average of 48.79 minutes and about
 \label{table:2}
 \end{table}
 \vspace*{-10pt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/Large Datasets.png}
+    \caption{Execution Time for Large Datasets as seen in Table \ref{table:2}}
+    \label{fig:large_dataset}
+\end{figure}
 
 Upon considering the statistics obtained from the above results and using them in calculating the power consumption, we can see that the average power consumed for find the best performing algorithm in the traditional methods for one of the small datasets is about 65.061W, but when using FMLearn the average power consumed is only about 10.629W which is about 86.718\% saving in the power used. In the case of large datasets, the average power consumed to find the best performing algorithm is about 710.946W, but when using FMLearn the average power consumed is only about 26.805W, which is about 95.762\% reduction in power used when compared to the traditional approach where FMLearn is not used.
 
