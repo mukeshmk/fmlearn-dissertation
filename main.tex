@@ -17,7 +17,7 @@
 %----------------------------------------------------------------------------------------
 
 \newcommand{\thesistitle}{Federated Meta-Learning: A Novel Approach for Algorithm Selection} % Your thesis title, this is used in the title and abstract
-\newcommand{\degree}{Master of Science in Data Science} % Your degree name, this is used in the title page and abstract
+\newcommand{\degree}{Master of Science in Computer Science (Data Science)} % Your degree name, this is used in the title page and abstract
 \newcommand{\typeofthesis}{Dissertations} % dissertation, Final Year Project, report, etc.
 \newcommand{\authorname}{Mukesh Arambakam} % Your name, this is used in the title page and PDF stuff
 %% Comment out the next line if you don't want your ID to appear
@@ -137,8 +137,8 @@
 \setlength\paperwidth{210mm}
 
 \setlength{\textheight}{235mm} %{8in}- 1/4"        BKay
-%\setlength{\oddsidemargin}{10mm}  %{0.5in} + 1/8" BKay
-%\setlength{\evensidemargin}{10mm} %{0.5in}        BKay
+\setlength{\oddsidemargin}{10mm}  %{0.5in} + 1/8" BKay
+\setlength{\evensidemargin}{10mm} %{0.5in}        BKay
 \setlength{\textwidth}{155mm}
 %\setlength{\topmargin}{0.62in} %{0.5in}+1/8"        BKay
 %\setlength{\headheight}{0in}
@@ -147,9 +147,11 @@
 
 
 \pagenumbering{roman}
+
+%% DECLARATION %%
 \section*{\Huge{Declaration}}
 \vspace{1cm}
-I hereby declare that this project is entirely my own work and that it has not been submitted as an exercise for a degree at this or any other university.
+I hereby declare that the work described in this dissertation is, except where otherwise stated, entirely my own work, and has not been submitted as an exercise for a degree at this or any other university
 
 \vspace{1cm}
 I have read and I understand the plagiarism provisions in the General Regulations of the University Calendar for the current year, found at \url{http://www.tcd.ie/calendar}.
@@ -160,16 +162,32 @@ I have also completed the Online Tutorial on avoiding plagiarism `Ready Steady W
 \vspace{3cm}
 
 Signed:~\rule{5cm}{0.3pt}\hfill Date:~\rule{5cm}{0.3pt}
+\newpage
 
-\chapter*{Abstract}
-\input{abastract/abastract.tex}
+%% LEND LIBRARY %%
+\section*{\Huge{Permission to lend and/or copy}}
+\vspace{1cm}
+I agree that the Trinity College Library may lend or copy this dissertation upon request.
+
+\vspace{3cm}
+
+Signed:~\rule{5cm}{0.3pt}\hfill Date:~\rule{5cm}{0.3pt}
+
 
 \newpage
+
+
 \onehalfspacing\raggedright %\raggedright turns off justification and hypenation
 
 \section*{\Huge{Acknowledgements}}
 \input{acknowledgement/acknowledgement}
 
+\singlespacing\justify
+\chapter*{Abstract}
+\input{abastract/abastract.tex}
+
+\onehalfspacing\raggedright %\raggedright turns off justification and hypenation
+\newpage
 
 \tableofcontents
 \listoffigures
