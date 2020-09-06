@@ -28,6 +28,25 @@ The configuration and details of the machine used to measure these metrics are a
 \section{Meta-Features: Auto-Sklearn}
 \label{meta-features-ask}
 
+Meta-features used to describe the dataset are:
+\begin{lstlisting}
+{
+    ClassEntropy, SymbolsSum, SymbolsSTD, SymbolsMean, SymbolsMax, SymbolsMin,
+    ClassProbabilitySTD, ClassProbabilityMean, ClassProbabilityMax,
+    ClassProbabilityMin, InverseDatasetRatio, DatasetRatio,
+    RatioNominalToNumerical, RatioNumericalToNominal,
+    NumberOfCategoricalFeatures, NumberOfNumericFeatures,
+    NumberOfMissingValues, NumberOfFeaturesWithMissingValues,
+    NumberOfInstancesWithMissingValues, NumberOfFeatures, NumberOfClasses,
+    NumberOfInstances, LogInverseDatasetRatio, LogDatasetRatio,
+    PercentageOfMissingValues, PercentageOfFeaturesWithMissingValues,
+    PercentageOfInstancesWithMissingValues, LogNumberOfFeatures,
+    LogNumberOfInstances & TargetType.
+}
+\end{lstlisting}
+On the next page you will went an example.
+\newpage
+An example of meta-features obtained from the \textit{calculate\_all\_metafeatures\_with\_labels()} method from autosklearn library for the Iris Dataset are:
 
 \begin{lstlisting}
 {
